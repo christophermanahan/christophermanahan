@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Minimize Assumptions - Simple Design &amp; SOLID | TBD</title>
+<meta name="generator" content="Jekyll v3.8.4" />
+<meta property="og:title" content="Minimize Assumptions - Simple Design &amp; SOLID" />
+<meta name="author" content="Christopher Manahan" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This blog post assumes familiarity with Conway’s Game of Life." />
+<meta property="og:description" content="This blog post assumes familiarity with Conway’s Game of Life." />
+<link rel="canonical" href="http://localhost:4000/2018/10/04/minimize-assumptions.html" />
+<meta property="og:url" content="http://localhost:4000/2018/10/04/minimize-assumptions.html" />
+<meta property="og:site_name" content="TBD" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-10-04T00:00:00-04:00" />
+<script type="application/ld+json">
+{"description":"This blog post assumes familiarity with Conway’s Game of Life.","author":{"@type":"Person","name":"Christopher Manahan"},"@type":"BlogPosting","url":"http://localhost:4000/2018/10/04/minimize-assumptions.html","headline":"Minimize Assumptions - Simple Design &amp; SOLID","dateModified":"2018-10-04T00:00:00-04:00","datePublished":"2018-10-04T00:00:00-04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/10/04/minimize-assumptions.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="TBD" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">TBD</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Minimize Assumptions - Simple Design &amp; SOLID</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-10-04T00:00:00-04:00" itemprop="datePublished">Oct 4, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <hr />
+<p>This blog post assumes familiarity with Conway’s Game of Life.</p>
+
+<p>While reading The Four Rules of Simple Design (FRSD) a pattern emerges across several of the examples that seemed to sit at a crossroads between simple design and SOLID principles. I will refer to this pattern as ‘minimize assumptions’ and I believe it is an important sub-component of writing easily extensible code.</p>
+
+<h3 id="duplication-of-knowledge-about-topology">Duplication of Knowledge about Topology</h3>
+
+<p>The first encounter that displays how assumptions can harm our code quality appears in the “Duplication of Knowledge about Topology” example in FRSD. Here, a set_living_at method has been implemented on the World class to set a living cell to a specific coordinate in the game world.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">World</span>
+  <span class="k">def</span> <span class="nf">set_living_at</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="c1"># Better get flat</span>
+    <span class="c1">#...</span>
+  <span class="k">end</span> 
+<span class="k">end</span></code></pre></figure>
+
+<p>Unfortunately, we discover that the coordinates dimensionality has been hard coded into the method as well as all cell types that need access to said coordinates.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">LivingCell</span> 
+  <span class="nb">attr_reader</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">:y</span> <span class="c1"># 'Cause there ain't no going back</span>
+<span class="k">end</span>
+<span class="k">class</span> <span class="nc">DeadCell</span>
+  <span class="nb">attr_reader</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">:y</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>What immediately follows is a limitation on our ability to extend the code in an interesting and perhaps desirable manner.</p>
+
+<p>By making a strong assumption about the dimensionality of our world’s representation, we have removed the ability to easily extend our code to handle not just 3-dimensions (which could be extremely visually interesting) but any number of higher dimensions. This assumption would have spread like a virus throughout our codebase as well, with all cell types making the same strong assumption and producing a codebase that disregards the Open Closed principle and disallows interesting extensions to our project without significant modification. This virus-like decision could potentially be deeply embedded within our code, affecting everything from how we check a location’s neighbors to how we define the parameters that govern the logic of the game.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">ExampleCell</span> 
+  <span class="nb">attr_reader</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">:y</span>
+
+  <span class="k">def</span> <span class="nf">neighbors</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="o">..</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span> <span class="k">do</span>
+      <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="o">..</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span> <span class="k">do</span>
+        <span class="c1"># Have fun modifying this method</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>By removing this assumption we can avoid situations such as values like ‘2’ and ‘3’ being hardcoded into the logic that dictates the neighboring cell rules for life and death and allow these values to be dynamically decided by the client when they choose their desired game dimensionality.</p>
+
+<p>Haines suggests a solution that generalizes x and y coordinates to the concept of a class that is readily swappable with locations classes of different dimensionality.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Location</span> 
+  <span class="nb">attr_reader</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">:y</span> 
+  <span class="k">def</span> <span class="nf">neighbors</span>
+    <span class="c1"># Calculate neighbor stuffs</span>
+  <span class="k">end</span> 
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">World</span>
+  <span class="k">def</span> <span class="nf">set_living_at</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="c1"># Ayy I could be any dimensionality!</span>
+    <span class="c1">#...</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">ExampleCell</span> 
+  <span class="nb">attr_reader</span> <span class="ss">:location</span> <span class="c1"># Virus eradicated</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>This immediately creates a richer, more extensible codebase that can be used to build all new Games’ of Life with different behavior, parameters, and potential visuals when rendered.</p>
+
+<h3 id="dont-have-tests-depend-on-previous-tests">Don’t Have Tests Depend on Previous Tests</h3>
+
+<p>The second encounter with problematic assumptions occurs in the “Don’t Have Tests Depend on Previous Tests” example. This example is meant to elucidate how creating dependencies between our tests can lead to a fragile testing suite, but I believe it also illustrates the broader potential mistake of making an assumption. The issue begins in an initial test to check if a new world is empty when constructed.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">test_a_new_world_is_empty</span> 
+  <span class="n">assert_true</span> <span class="no">World</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">empty?</span> <span class="c1"># I declare new worlds to be empty, peasants.</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>A subsequent behavioral test is then implemented to check that after the game state is updated a single time, an empty world stays empty. The crux of the issue is that this second test creates a new world, updates the game state, and then checks if the world is still empty.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">test_an_empty_world_stays_empty_after_a_tick</span>
+  <span class="n">world</span> <span class="o">=</span> <span class="no">World</span><span class="p">.</span><span class="nf">new</span> <span class="c1"># Says who?</span>
+  <span class="n">next_world</span> <span class="o">=</span> <span class="n">world</span><span class="p">.</span><span class="nf">tick</span>
+  <span class="n">assert_true</span> <span class="n">next_world</span><span class="p">.</span><span class="nf">empty?</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>And therein lies the problem; an assumption has been made that a new world is created empty. Should we choose to alter this design in the future and initially construct non-empty worlds, this test will mysteriously fail and display the fragile test coverage our unnecessary assumption has caused. By minimizing assumptions and realizing that we can drive our code with TDD, we can employ a builder pattern that provides a method for creating and returning an empty world without any dependencies on our initial configuration, thus strengthening our testing suite.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">test_an_empty_world_stays_empty_after_a_tick</span>
+  <span class="n">world</span> <span class="o">=</span> <span class="no">World</span><span class="p">.</span><span class="nf">empty</span> <span class="c1"># No worldly assumptions up in here</span>
+  <span class="n">next_world</span> <span class="o">=</span> <span class="n">world</span><span class="p">.</span><span class="nf">tick</span>
+  <span class="n">assert_true</span> <span class="n">next_world</span><span class="p">.</span><span class="nf">empty?</span>
+<span class="k">end</span></code></pre></figure>
+
+<h3 id="procedural-polymorphism">Procedural Polymorphism</h3>
+
+<p>The third and final encounter I discovered that elucidates how minimizing assumptions can create higher quality, more extensible code occurs in the “Procedural Polymorphism” example. Up until this point, a cell class has been implemented that uses an if else branch to execute different behavior based on the ‘alive’ status of the cell.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Cell</span> 
+  <span class="c1"># ...</span>
+  <span class="k">def</span> <span class="nf">alive_in_next_generation?</span> 
+    <span class="k">if</span> <span class="n">alive</span> <span class="c1"># You're either alive. Or you ain't. Make up your mind!</span>
+      <span class="n">stable_neighborhood?</span>
+    <span class="k">else</span>
+      <span class="n">genetically_fertile_neighborhood?</span>
+    <span class="k">end</span> 
+  <span class="k">end</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>And once again this code makes a strong assumption about the nature of the game that has the same effect of limiting our ability to extend the code with interesting and potentially desirable features.</p>
+
+<p>Haines initial attempt to remedy this is to use a state property that can take on values of ‘alive’ or ‘dead’ but this leads us to the same limitations that hard coding coordinates into our world and cells hit earlier.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Cell</span> <span class="c1"># ...</span>
+  <span class="k">def</span> <span class="nf">alive_in_next_generation?</span> 
+    <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="no">ALIVE</span> <span class="c1"># I said it once. I won't say it again.</span>
+      <span class="n">stable_neighborhood?</span>
+    <span class="k">elsif</span> <span class="n">state</span> <span class="o">==</span> <span class="no">DEAD</span>
+      <span class="n">genetically_fertile_neighborhood?</span>
+    <span class="k">end</span> 
+  <span class="k">end</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>By utilizing hard coded strings we have eliminated the potential to easily extend our game with new and potentially game altering cell types that we may want to implement to create a richer, more varied Game of Life. Haines uses the Zombie Cell as an example but I leave it to the imagination to think of how introducing new cell types with their own sets of rules could create novel forms of the Game of Life that could produce potentially beautiful animations and static constructs.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">AsexualCell</span>
+  <span class="k">def</span> <span class="nf">alive_in_next_generation?</span>
+    <span class="c1"># I don't need no friends, they're all in my head.</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>By utilizing the idea of inverted composition introduced in the “Inverted Composition as a Replacement for Inheritance” example, we can create a codebase that is readily extensible so that we may experiment with a variety of different cells and their emergent interactions.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Location</span>
+  <span class="nb">attr_reader</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">:y</span> 
+  <span class="nb">attr_reader</span> <span class="ss">:cell</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">LivingCell</span>
+  <span class="k">def</span> <span class="nf">stays_alive?</span><span class="p">(</span><span class="n">number_of_neighbors</span><span class="p">)</span>
+    <span class="n">number_of_neighbors</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">||</span>
+    <span class="n">number_of_neighbors</span> <span class="o">==</span> <span class="mi">3</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">DeadCell</span>
+  <span class="k">def</span> <span class="nf">comes_to_life?</span><span class="p">(</span><span class="n">number_of_neighbors</span><span class="p">)</span>
+    <span class="n">number_of_neighbors</span> <span class="o">==</span> <span class="mi">3</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre></figure>
+
+<h3 id="irl-tic-tac-toe">IRL: Tic Tac Toe</h3>
+
+<p>The inadvertant decision to minimize assumptions naturally appeared when writing my first Tic Tac Toe application. Early on I made the decision to not include any explicit hard coded boards into my source code. This decision lead me to use for loops with different starting and ending points, and increment values to check for horizontal, diagonal, and vertical wins.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">class</span> <span class="nc">Board</span>
+  <span class="k">def</span> <span class="nf">checkLoop</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">loopStart</span><span class="p">,</span> <span class="n">loopEnd</span><span class="p">,</span> <span class="n">increment</span><span class="p">)</span>
+    <span class="c1"># Yay abstraction, rows, columns, and diagonals can all use this method</span>
+    <span class="p">(</span><span class="n">loopStart</span><span class="o">..</span><span class="n">loopEnd</span><span class="p">).</span><span class="nf">step</span><span class="p">(</span><span class="n">increment</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">position</span><span class="o">|</span>
+      <span class="k">return</span> <span class="kp">false</span> <span class="k">if</span> <span class="n">board</span><span class="p">[</span><span class="n">position</span><span class="p">]</span> <span class="o">!=</span> <span class="n">symbol</span>
+    <span class="k">end</span>
+    <span class="kp">true</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">checkRowsForWin</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">symbol</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="p">(</span><span class="n">start</span><span class="o">..</span><span class="n">board</span><span class="p">.</span><span class="nf">length</span><span class="p">).</span><span class="nf">step</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">rowStart</span><span class="o">|</span>
+      <span class="k">return</span> <span class="kp">true</span> <span class="k">if</span> <span class="n">checkLoop</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">rowStart</span><span class="p">,</span> <span class="n">rowStart</span><span class="o">+</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="kp">false</span>
+  <span class="k">end</span>
+  <span class="c1"># ...</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>Without knowing it at the time, I had minimized the assumptions I made about the games format. Later on, when tempted out of curiosity to add the option to play 4x4 and 5x5 tic tac toe boards to flex the alpha beta algorithm a bit (which failed until the magic of memoization, another post for another time,) I found that because my game logic was decoupled from assumptions about its format, implementing this feature was as simple as asking the user to choose a board size.</p>
+
+<blockquote>
+  <p>Simple design allows small changes to implement powerful new features without modifying existing code.</p>
+</blockquote>
+
+<p>And that’s the whole point. By following the Four Rules of Simple Design from the start and minimizing assumptions between classes, extending the codebase became easier. Simple design allows small changes to implement powerful new features without modifying existing code. Solid and simple were best friends all along!</p>
+
+  </div><a class="u-url" href="/2018/10/04/minimize-assumptions.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TBD</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Christopher Manahan</li><li><a class="u-email" href="mailto:cmanahan@8thlight.com">cmanahan@8thlight.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/christophermanahan"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">christophermanahan</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Documenting the journey of a new apprentice @ 8th Light
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
