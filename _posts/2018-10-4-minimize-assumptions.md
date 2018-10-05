@@ -49,7 +49,7 @@ class ExampleCell
 end
 {% endhighlight %}
 
-By removing this assumption we can avoid situations such as values like '2' and '3' being hardcoded into the logic that dictates the neighboring cell rules for life and death and allow these values to be dynamically decided by the client when they choose their desired game dimensionality. 
+By removing this assumption we can avoid situations such as hardcoding values like '2' and '3' into the game logic that dictates the neighboring cell rules for life and death and allow these values to be dynamically decided by the client when they choose their desired game dimensionality. 
 
 Haines suggests a solution that generalizes x and y coordinates to the concept of a class that is readily swappable with locations classes of different dimensionality.
 
@@ -72,7 +72,7 @@ class ExampleCell
 end
 {% endhighlight %}
 
-This immediately creates a richer, more extensible codebase that can be used to build all new Games' of Life with different behavior, parameters, and potential visuals when rendered.
+This immediately creates a richer, more extensible codebase that can be used to build all new Game of Lifes with different behavior, parameters, and potential visuals when rendered.
 
 ### Don’t Have Tests Depend on Previous Tests
 
@@ -106,7 +106,7 @@ end
 
 ### Procedural Polymorphism
 
-The third and final encounter I discovered that elucidates how minimizing assumptions can create higher quality, more extensible code occurs in the "Procedural Polymorphism" example. Up until this point, a cell class has been implemented that uses an if else branch to execute different behavior based on the 'alive' status of the cell.
+The third and final encounter I discovered that elucidates how minimizing assumptions can create higher quality, more extensible code occurs in the "Procedural Polymorphism" example. Up until this point, a cell class has been implemented that uses an if-else branch to execute different behavior based on the 'alive' status of the cell.
 
 {% highlight ruby %}
 class Cell 
@@ -171,7 +171,7 @@ end
 
 ### IRL: Tic Tac Toe
 
-The inadvertant decision to minimize assumptions naturally appeared when writing my first Tic Tac Toe application. Early on I made the decision to not include any explicit hard coded boards into my source code. This decision lead me to use for loops with different starting and ending points, and increment values to check for horizontal, diagonal, and vertical wins. 
+The inadvertant decision to minimize assumptions naturally appeared when writing my first Tic Tac Toe application. Early on I made the decision to not include any explicit hard coded boards into my source code. This decision lead me to use for-loops with different starting and ending points, and increment values to check for horizontal, diagonal, and vertical wins. 
 
 {% highlight ruby %}
 class Board
