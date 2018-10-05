@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-04T16:40:17-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">TBD</title><subtitle>Documenting the journey of a new apprentice @ 8th Light
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-05T09:16:19-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">TBD</title><subtitle>Documenting the journey of a new apprentice @ 8th Light
 </subtitle><author><name>Christopher Manahan</name></author><entry><title type="html">Minimize Assumptions - Simple Design &amp;amp; SOLID</title><link href="http://localhost:4000/2018/10/04/minimize-assumptions.html" rel="alternate" type="text/html" title="Minimize Assumptions - Simple Design &amp; SOLID" /><published>2018-10-04T00:00:00-04:00</published><updated>2018-10-04T00:00:00-04:00</updated><id>http://localhost:4000/2018/10/04/minimize-assumptions</id><content type="html" xml:base="http://localhost:4000/2018/10/04/minimize-assumptions.html">&lt;hr /&gt;
 &lt;p&gt;This blog post assumes familiarity with Conway’s Game of Life.&lt;/p&gt;
 
@@ -39,7 +39,7 @@
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;By removing this assumption we can avoid situations such as values like ‘2’ and ‘3’ being hardcoded into the logic that dictates the neighboring cell rules for life and death and allow these values to be dynamically decided by the client when they choose their desired game dimensionality.&lt;/p&gt;
+&lt;p&gt;By removing this assumption we can avoid situations such as hardcoding values like ‘2’ and ‘3’ into the game logic that dictates the neighboring cell rules for life and death and allow these values to be dynamically decided by the client when they choose their desired game dimensionality.&lt;/p&gt;
 
 &lt;p&gt;Haines suggests a solution that generalizes x and y coordinates to the concept of a class that is readily swappable with locations classes of different dimensionality.&lt;/p&gt;
 
@@ -60,7 +60,7 @@
   &lt;span class=&quot;nb&quot;&gt;attr_reader&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:location&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Virus eradicated&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;This immediately creates a richer, more extensible codebase that can be used to build all new Games’ of Life with different behavior, parameters, and potential visuals when rendered.&lt;/p&gt;
+&lt;p&gt;This immediately creates a richer, more extensible codebase that can be used to build all new Game of Lifes with different behavior, parameters, and potential visuals when rendered.&lt;/p&gt;
 
 &lt;h3 id=&quot;dont-have-tests-depend-on-previous-tests&quot;&gt;Don’t Have Tests Depend on Previous Tests&lt;/h3&gt;
 
@@ -88,7 +88,7 @@
 
 &lt;h3 id=&quot;procedural-polymorphism&quot;&gt;Procedural Polymorphism&lt;/h3&gt;
 
-&lt;p&gt;The third and final encounter I discovered that elucidates how minimizing assumptions can create higher quality, more extensible code occurs in the “Procedural Polymorphism” example. Up until this point, a cell class has been implemented that uses an if else branch to execute different behavior based on the ‘alive’ status of the cell.&lt;/p&gt;
+&lt;p&gt;The third and final encounter I discovered that elucidates how minimizing assumptions can create higher quality, more extensible code occurs in the “Procedural Polymorphism” example. Up until this point, a cell class has been implemented that uses an if-else branch to execute different behavior based on the ‘alive’ status of the cell.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Cell&lt;/span&gt; 
   &lt;span class=&quot;c1&quot;&gt;# ...&lt;/span&gt;
@@ -145,7 +145,7 @@
 
 &lt;h3 id=&quot;irl-tic-tac-toe&quot;&gt;IRL: Tic Tac Toe&lt;/h3&gt;
 
-&lt;p&gt;The inadvertant decision to minimize assumptions naturally appeared when writing my first Tic Tac Toe application. Early on I made the decision to not include any explicit hard coded boards into my source code. This decision lead me to use for loops with different starting and ending points, and increment values to check for horizontal, diagonal, and vertical wins.&lt;/p&gt;
+&lt;p&gt;The inadvertant decision to minimize assumptions naturally appeared when writing my first Tic Tac Toe application. Early on I made the decision to not include any explicit hard coded boards into my source code. This decision lead me to use for-loops with different starting and ending points, and increment values to check for horizontal, diagonal, and vertical wins.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Board&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;checkLoop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;loopStart&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;loopEnd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;increment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
