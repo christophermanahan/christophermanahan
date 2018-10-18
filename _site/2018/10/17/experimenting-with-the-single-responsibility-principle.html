@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Experimenting with the Single Responsibility Principle | TBD</title>
+<meta name="generator" content="Jekyll v3.8.4" />
+<meta property="og:title" content="Experimenting with the Single Responsibility Principle" />
+<meta name="author" content="Christopher Manahan" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="When we want to probe the real world to understand how it works we often rely on instruments that can measure with a precision that far exceeds our own subjective capabilities. We use thermometers to ascertain a numeric representation of what we would term hot or cold. When developing software we have a tool that allows us to probe our code to understand how it works. This tool is unit testing." />
+<meta property="og:description" content="When we want to probe the real world to understand how it works we often rely on instruments that can measure with a precision that far exceeds our own subjective capabilities. We use thermometers to ascertain a numeric representation of what we would term hot or cold. When developing software we have a tool that allows us to probe our code to understand how it works. This tool is unit testing." />
+<link rel="canonical" href="http://localhost:4000/2018/10/17/experimenting-with-the-single-responsibility-principle.html" />
+<meta property="og:url" content="http://localhost:4000/2018/10/17/experimenting-with-the-single-responsibility-principle.html" />
+<meta property="og:site_name" content="TBD" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-10-17T00:00:00-04:00" />
+<script type="application/ld+json">
+{"description":"When we want to probe the real world to understand how it works we often rely on instruments that can measure with a precision that far exceeds our own subjective capabilities. We use thermometers to ascertain a numeric representation of what we would term hot or cold. When developing software we have a tool that allows us to probe our code to understand how it works. This tool is unit testing.","author":{"@type":"Person","name":"Christopher Manahan"},"@type":"BlogPosting","url":"http://localhost:4000/2018/10/17/experimenting-with-the-single-responsibility-principle.html","headline":"Experimenting with the Single Responsibility Principle","dateModified":"2018-10-17T00:00:00-04:00","datePublished":"2018-10-17T00:00:00-04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/10/17/experimenting-with-the-single-responsibility-principle.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="TBD" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">TBD</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Experimenting with the Single Responsibility Principle</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-10-17T00:00:00-04:00" itemprop="datePublished">Oct 17, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>When we want to probe the real world to understand how it works we often rely on instruments that can measure with a precision that far exceeds our own subjective capabilities. We use thermometers to ascertain a numeric representation of what we would term hot or cold. When developing software we have a tool that allows us to probe our code to understand how it works. This tool is unit testing.</p>
+
+<h3 id="experimental-control">Experimental Control</h3>
+
+<p>Making good, reliable measurements requires a certain level of control over the environment in which the measurement is made. When we use a thermometer to measure the temperature of some system we expect that if the quantity we are measuring has no reason to change that our instrument should give us the same results repeatedly. In this scenario we rely on the systems ability to hold other factors like the pressure and volume constant, so that we can be sure that our result is true and replicatable.</p>
+
+<ul>
+  <li>
+    <h5 id="quick-aside-temperature-pressure-and-volume-are-seperate-quantities-that-nonetheless-affect-on-one-another">Quick Aside: Temperature, Pressure, and Volume are seperate quantities that nonetheless affect on one another.</h5>
+  </li>
+</ul>
+
+<p>However, if our system was not designed with the single responsibility of managing heat but was also responsible for managing pressure, painful implications become apparent if we ever decide to change how the system manages these quantities. If we asked our system to accept and manage a certain amount of heat, and we have left the mechanisms by which it does so intact, we would expect a measurement now to be the same as a measurement later. However, if without our knowledge someone (or a naive version of us at a different time) changed the mechanisms that manage the pressure of the system in between measurements our thermometer would show us two completely different temperatures. This crisis of measurement has multiple implications that are important to consider when designing systems.</p>
+
+<h3 id="unit-tests-and-srp">Unit Tests and SRP</h3>
+
+<blockquote>
+  <p>Changes to one responsibility may impair or inhibit the class’ ability to meet the others.
+<strong>Sandi Metz</strong></p>
+</blockquote>
+
+<p>A major problem that has been noted by many, notably by Uncle Bob in his article on <a href="https://8thlight.com/blog/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html">The Single Responsibility Principle</a> shows us how coupling different responsibilities that are likely to change in a single class leads us to a rigid, static codebase. We are fearful that changes to one responsibility in a class could collapse the operation of other responsibilities and this fear prevents useful change. However, there is another potential and notable outcome. If our thermometer tells us two different measurements and we have not altered the mechanisms that manage heat, we lose faith in our thermometer. We may give up on the tool’s ability to probe the behavior of the system and simply tinker with the system until it generally does what we want. When working on software, this is the moment where we abandon our testing suite and just throw code at the wall until the system ‘works.’</p>
+
+<p>Part of the reason that the SRP is a cornerstone of good system design is that it allows us to place faith in our tests. It isolates behavior in well defined modules where our thermometer only returns different results when we make visible changes to how the system manages heat. And if we want to tinker with the system and build a more efficient heat manager, we can trust our thermometer when it tells us that our system stayed the same temperature. The SRP provides confidence in our testing suite.</p>
+
+<h3 id="well-defined-interfaces">Well Defined Interfaces</h3>
+
+<p>This isolation of behavior also provides an additional benefit. If we have designed two seperate mechanisms in our system for managing heat and pressure, the mechanisms can provide a clear signal to each other when we change how they operate. The ability for the various modules in our system to communicate how they will operate to one another is the basis of an interface. The SRP proves to be a guiding light when we want to build well defined interfaces that only change when we want to alter a modules single responsibility. The SRP enables confidence when we probe behavior (unit test) and helps us build well defined modules that have a clear intent when we communicate between them (interfaces.)</p>
+
+<h3 id="seperate-concerns">Seperate Concerns</h3>
+
+<blockquote>
+  <p>We want to increase the cohesion between things that change for the same reasons, and we want to decrease the coupling between those things that change for different reasons.
+<strong>Uncle Bob</strong></p>
+</blockquote>
+
+<p>Learning to isolate change provided humanity with the scientific revolution when applied to create the experimental method. We now had a powerful tool to probe the behavior of nature and be confident that we could <em>replicate</em> our results. The SRP teaches us the same lesson when applied to our code; we can test with confidence and communicate changes clearly. We just have to be responsible.</p>
+
+  </div><a class="u-url" href="/2018/10/17/experimenting-with-the-single-responsibility-principle.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TBD</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Christopher Manahan</li><li><a class="u-email" href="mailto:cmanahan@8thlight.com">cmanahan@8thlight.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/christophermanahan"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">christophermanahan</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Documenting the journey of a new apprentice @ 8th Light
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
