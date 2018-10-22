@@ -22,10 +22,6 @@ A major problem that has been noted by many, notably by Uncle Bob in his article
 
 Part of the reason that the SRP is a cornerstone of good system design is that it allows us to place faith in our tests. It isolates behavior in well defined modules where our thermometer only returns different results when we make visible changes to how the system manages heat. And if we want to tinker with the system and build a more efficient heat manager, we can trust our thermometer when it tells us that our system stayed the same temperature. The SRP provides confidence in our testing suite.
 
-### Well Defined Interfaces
-
-This isolation of behavior also provides an additional benefit. If we have designed two seperate mechanisms in our system for managing heat and pressure, the mechanisms can provide a clear signal to each other when we change how they operate. The ability for the various modules in our system to communicate how they will operate to one another is the basis of an interface. The SRP proves to be a guiding light when we want to build well defined interfaces that only change when we want to alter a modules single responsibility. The SRP enables confidence when we probe behavior (unit test) and helps us build well defined modules that have a clear intent when we communicate between them (interfaces.)
-
 ### Seperate Concerns
 
 >We want to increase the cohesion between things that change for the same reasons, and we want to decrease the coupling between those things that change for different reasons.
