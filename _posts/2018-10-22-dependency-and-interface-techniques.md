@@ -206,21 +206,26 @@ class Building
     @apartments = apartments
   end
 
-  def list
-    apartments.to_enum(:each)
+  def get(fn)
+    # Modify apartments here before fn call
+    fn.call(apartments)
   end
   ...
 end
 
 # Check if an entire building is furnished
-all_rooms_furnished? = building.list.all?(&:furnished)
+all_rooms_furnished? = building.get(-> apartments { 
+  apartments.all?(&:furnished) 
+}
 
 # Find all apartments bigger than 3000 sq feet
-bigger_than_3000_sq_ft = building.list.select do |apartment|
-  apartment.size > 3000
-end
+bigger_than_3000_sq_ft = building.get(-> apartments { 
+  apartments.select do |apartment|
+    apartment.size > 3000
+  end 
+})
 {% endhighlight %}
 
-Through inversion of control we have exposed every method that can act on an enumerable to clients of building and the public interface of apartment provides documentation for the parameters that are available. This has drastically reduced the size of the public interface and has allowed clients to send messages to building that specify how _they_ want to receive the target apartments instead of having to deal with a predefined response.
+Through inversion of control we have exposed a method that can accept anonymous functions that act on the apartments enumerable to clients of building. The public interface of apartment provides documentation for the parameters that are available to the client. This has drastically reduced the size of the public interface and has allowed clients to send messages to building that specify how _they_ want to receive the target apartments instead of having to deal with a predefined response. This also allows us to keep our implementation of apartments private and manipulate the apartments before calling the anonymous function passed to get if desired.
 
 These techniques can be applied to transfrom rigid classes with hidden internal dependencies into flexible, modular classes that can be passed into applications without worry. Managing dependencies and crafting flexible interfaces are two key design perspectives that will prevent an application from crystallizing into a codebase that is resistant or even impossible to change. Our software should be open to extension and closed to modification and flexible, modular code defines a path toward this goal.
