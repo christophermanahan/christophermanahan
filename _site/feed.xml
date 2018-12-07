@@ -1,5 +1,129 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-23T10:16:21-04:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">TBD</title><subtitle>Documenting the journey of a new apprentice @ 8th Light
-</subtitle><author><name>Christopher Manahan</name></author><entry><title type="html">Techniques to Manage Dependencies and Build Flexible Interfaces</title><link href="http://localhost:4000/2018/10/22/dependency-and-interface-techniques.html" rel="alternate" type="text/html" title="Techniques to Manage Dependencies and Build Flexible Interfaces" /><published>2018-10-22T00:00:00-04:00</published><updated>2018-10-22T00:00:00-04:00</updated><id>http://localhost:4000/2018/10/22/dependency-and-interface-techniques</id><content type="html" xml:base="http://localhost:4000/2018/10/22/dependency-and-interface-techniques.html">&lt;p&gt;Seemingly innocuous code can often be hiding design decisions that will only rear their ugly head as a project morphs and grows over time. When working on a class that represents apartments in a building, it is quite easy to lock your code into a myriad of strangling dependencies and a rigid interface.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-07T11:49:37-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">TBD</title><subtitle>Documenting the journey of a new apprentice @ 8th Light
+</subtitle><author><name>Christopher Manahan</name></author><entry><title type="html">Dependency Inversion</title><link href="http://localhost:4000/2018/12/07/dependency-inversion.html" rel="alternate" type="text/html" title="Dependency Inversion" /><published>2018-12-07T00:00:00-05:00</published><updated>2018-12-07T00:00:00-05:00</updated><id>http://localhost:4000/2018/12/07/dependency-inversion</id><content type="html" xml:base="http://localhost:4000/2018/12/07/dependency-inversion.html">&lt;ul&gt;
+  &lt;li&gt;High-level modules should not depend on low-level modules. Both should depend on abstractions.
+  &lt;/li&gt;
+  &lt;li&gt;Abstractions should not depend upon details. Details should depend upon abstractions.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Dependency inversion begins with these two statements. When we speak of high level modules we are talking about the business logic of an application. High level modules contain the identity of the application; they are responsible for the behavior of the system.&lt;/p&gt;
+
+&lt;h3 id=&quot;depending-on-lower-levels&quot;&gt;Depending on Lower Levels&lt;/h3&gt;
+
+&lt;p&gt;When you have modules that define the identity of your application, you would like these modules to only have to change if the identity of the application changes. They should not have to respond to changes deeper down in the implementation details.&lt;/p&gt;
+
+&lt;p&gt;When the identity of the application depends on lower level modules any changes to these low level modules will result in rewrites to the business logic of the application.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;This is diametrically opposed to the desired behavior.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;High level modules should function independent of the implementation of lower level modules. Those details should be abstracted away from the high level module so that they may be reused just as low level modules are reused to implement commonly desired functionality. By applying dependency inversion we can isolate high level modules from changes in the implementation details of lower level concrete classes. In other words, we can make our application flexible and extensible.&lt;/p&gt;
+
+&lt;h3 id=&quot;layers-of-abstraction&quot;&gt;Layers of Abstraction&lt;/h3&gt;
+
+&lt;p&gt;Well defined object oriented programs have clearly defined layers of abstraction. These layers allow a developer to build an application the way a mechanic builds a car. Once we place an engine in the car we do not worry about the pistons and cylinders that drive revolution. We design the car around the engines ability to rotate a driveshaft. This is the ‘engine abstraction’ and it represents one layer in the development of a car. This same principle helps us build software.&lt;/p&gt;
+
+&lt;p&gt;However these layers have the potential to be abused and can lead to transitive dependencies.&lt;/p&gt;
+
+&lt;p&gt;Transitive dependencies result when a naive layering scheme is applied. Having high level modules depend on lower level modules, who in turn depend on even lower level modules results in a structure where a change to a low level module can ‘propagate up’ the dependency structure and cause reverberations that require change to all of the higher level modules that depend upon it.&lt;/p&gt;
+
+&lt;p&gt;How can we avoid this chain of changes?&lt;/p&gt;
+
+&lt;p&gt;In order to avoid transitive dependencies the high level module should define abstract interfaces for the modules that will implement behavior they require.&lt;/p&gt;
+
+&lt;h3 id=&quot;clients-define-interfaces&quot;&gt;Clients Define Interfaces&lt;/h3&gt;
+
+&lt;p&gt;Interfaces are a powerful tool that tell developers to rely on behavior and not implementation. As long as interfaces are implemented, a higher level module does not care about how the implementer of an interface performs its duty, as long as it gets it done efficiently and correctly.&lt;/p&gt;
+
+&lt;p&gt;By having higher level modules define the interfaces they need, we have also applied the dependency inversion principle to the interfaces themselves. The high level module now ‘owns’ the interface, because it defines the behavior it requires. Low level modules simply implement that interface, but no longer own the functionality they will provide. They do not own the behavior.&lt;/p&gt;
+
+&lt;p&gt;Not only does this inversion of ownership break the dependence of higher level modules on changes to lower level modules, it also breaks the transitive dependency by depending on abstractions. The interface lives within the same package as the high level modules, forcing the lower level module to adhere to its desired structure.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Depend on abstractions 
+-Uncle Bob&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;It is inevitable that the code we write is volatile, that the interfaces we create will be subject to change.&lt;/p&gt;
+
+&lt;p&gt;This is why it is so important for the client to define the interface it needs. If the interface lives with the concrete class, and the interface of the concrete class changes, this will propagate up to the dependent class and require rewriting the business logic of the application. However, if the client owns the interface, the only time the interface will change is when the client needs it to change, and the dependence of higher level modules on lower level modules has been broken.&lt;/p&gt;
+
+&lt;h3 id=&quot;defining-higher-level-interfaces&quot;&gt;Defining Higher Level Interfaces&lt;/h3&gt;
+
+&lt;p&gt;How do we define these higher level interfaces?&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The truths that do not vary when the details are changed 
+-Uncle Bob&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Interfaces should define generic abstractions that can be wielded by modules that identify the business logic of the application. These interfaces should be implemented by more specific, lower level concrete classes that depend on the interface defined by the higher level module.&lt;/p&gt;
+
+&lt;p&gt;The target object of the higher level module does not matter. The way the behavior of the interface is implemented does not matter. The only thing that matters is that the higher level policy can assume it has access to efficient and correct behavior.&lt;/p&gt;
+
+&lt;p&gt;Breaking the dependence on the identity of the lower level module has another desirable effect. It allows the higher level modules to manipulate and control objects that have not yet been written into existence.&lt;/p&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;The proper application of dependency inversion is necessary when designing reusable applications.&lt;/p&gt;
+
+&lt;p&gt;It is a primary design principle that allows the design of reusable, resilient, and flexible code. It breaks transitive dependencies and prevents change from propagating through an application requiring the developer to alter everything that it touches.&lt;/p&gt;
+
+&lt;p&gt;Change is inevitable. Having change reverberate thorough our applications is not. &lt;/p&gt;</content><author><name>Christopher Manahan</name></author><summary type="html">High-level modules should not depend on low-level modules. Both should depend on abstractions.   Abstractions should not depend upon details. Details should depend upon abstractions.</summary></entry><entry><title type="html">Composition and Inheritance</title><link href="http://localhost:4000/2018/11/02/composition-and-inheritance.html" rel="alternate" type="text/html" title="Composition and Inheritance" /><published>2018-11-02T00:00:00-04:00</published><updated>2018-11-02T00:00:00-04:00</updated><id>http://localhost:4000/2018/11/02/composition-and-inheritance</id><content type="html" xml:base="http://localhost:4000/2018/11/02/composition-and-inheritance.html">&lt;blockquote&gt;
+  &lt;p&gt;Prefer composition over inheritance&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Software mantras can often lead developers into believing that design philosphies are laws that cannot be broken. In particular, favoring composition over inheritance tends to often be morphed into ‘never inheritance.’ And while this may be a backlash to generations of programs that caused developers to experience a kind of pain that can only be brought about by the intense coupling created by misapplying inheritance, the mantra is surprisingly robust, and has few exceptions.&lt;/p&gt;
+
+&lt;h3 id=&quot;composition-is-natural&quot;&gt;Composition is Natural&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;How to break a problem down in order to build a solution up&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Composition tends to align well with how humans like to understand the natural world. When we encounter a complex problem, a proven approach throughout history is to ask, ‘Can we break this into smaller, approachable pieces?’ This is the take smaller bites until you can chew approach. Composition allows us to gradually build up objects in our mind and creates clear delineations that allow for magical properties like the ability to test small units and their interactions with one another.&lt;/p&gt;
+
+&lt;h4 id=&quot;composition-in-the-analog-world&quot;&gt;Composition in the Analog World&lt;/h4&gt;
+
+&lt;p&gt;Creating software without the use of composition would be like trying to reason about a car as one mass entity. When dealing with the complexities of an automobile it helps to think in terms of its subsquent parts. And even those subsequent parts can be broken down further. An engine is responsible for turning a drive shaft. But an engine is made up of, among other things, a fuel injector for creating aerosolized gasoline, a spark plug for igniting the aerosol, and cylinders inside of pistons to take advantage of the force generated by the subsequent explosion.&lt;/p&gt;
+
+&lt;p&gt;Breaking the engine down into it’s components allows us not just to reason about how it works, but reason about how to design it in the first place. Instead of asking how to rotate a drive shaft we can ask, how can I efficiently create a force, and how can I use the force to accomplish a rotation. Someone answered “small explosions” and the rest is history.&lt;/p&gt;
+
+&lt;h4 id=&quot;composition-in-the-digital-world&quot;&gt;Composition in the Digital World&lt;/h4&gt;
+
+&lt;p&gt;When building a game like Tic Tac Toe composition plays a simlar role in reasoning about how to break a problem down in order to build a solution up. If we simply think of tic tac toe as a game with rules we have no idea where to start building a solution. But by breaking it down we can start to reason about the various components in play. The game takes place on a board. There are players that wield symbols. The game has rules, and so on. Each of these individual pieces may also be composed of smaller, more digestable (and testable!) pieces.&lt;/p&gt;
+
+&lt;p&gt;Composition also promotes the use of polymorphism and duck typing to provide a variety of behaviors that can be injected as dependencies into higher level classes that expect a certain interface. These concepts promote generalized and robust solutions that follow another useful mantra of software design.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Code to an interface, not an implementation&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;So with all of this praise for composition, are there use cases for inheritance, or is it an old dinosaur of software design mucking up the compilers of enterprise loved languages like Java and C#?&lt;/p&gt;
+
+&lt;h3 id=&quot;the-dark-art-of-inheritance&quot;&gt;The Dark Art of Inheritance&lt;/h3&gt;
+
+&lt;p&gt;Inheritance provides a syntax supported, directed way to share behavior between classes. Inheritance achieves this by providing &lt;em&gt;automatic message forwarding&lt;/em&gt;. Inheritance functions by allowing developers to create subclass-superclass relationships, or more naturally, parent-child relationships. Children of superclasses &lt;em&gt;inherit&lt;/em&gt; all of the behavior of the parent class, and add their own behavior into the mix. With this inheritance comes the responsibility to anticipate changes to the parent classes interface and thus the problems emerge.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Inheritance creates strong coupling between the parent and child&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Whenever changes to the parent classes public interface are performed, all child classes must be altered to accomodate the change. This means that developers must be extremely careful to manage their dependencies. Superclasses should only be abstracted when they are &lt;em&gt;unlikely to change&lt;/em&gt;. From a similar perspective, if adhering to the dependency inversion principle, superclasses should be &lt;em&gt;less&lt;/em&gt; likely to change than their children. In addition, because children inherit &lt;em&gt;all&lt;/em&gt; of the public behavior of their parent, if we are to adhere to the Liskov substitution principle, we should only abstract superclasses when we are sure that the superclass behavior will be shared &lt;em&gt;and&lt;/em&gt; used by all of it’s children.&lt;/p&gt;
+
+&lt;p&gt;So with a careful mindset, when should we proceed forward with the decision to utilize the seemingly dark art of inheritance?&lt;/p&gt;
+
+&lt;h4 id=&quot;inheritance-is-special&quot;&gt;Inheritance is special&lt;/h4&gt;
+
+&lt;p&gt;Inheritance can be extremely useful when we desire &lt;em&gt;specialization&lt;/em&gt;. If we discover that we have a class that has a single responsibility and our goal is to make a variety of different variations on that class that will all utilize the behavior provided by our SRP abiding parent, we have a strong argument to apply inheritance.&lt;/p&gt;
+
+&lt;p&gt;The trick is to recognize when our classes are specializations of a generalization, and not when we simply want to share some behavior between classes.&lt;/p&gt;
+
+&lt;p&gt;Inheritance is a feature in many programming languages because it is useful to employ hierarchies when building data types. In Ruby, everything is an object. Whether it is a string or an integer, every value is an object and therefore is imbued with behavior. This provides a classic use case for inheritance, where it provides &lt;em&gt;consistency&lt;/em&gt; and a clear direction for the relationships among classes. All data types in Ruby forward messages that cannot be found within their own handlers to their superclass. This allowed the designers of the language to provide common behavior to &lt;em&gt;every&lt;/em&gt; data type in Ruby, and model everything as objects.&lt;/p&gt;
+
+&lt;h3 id=&quot;prefer-is-a-powerful-word&quot;&gt;Prefer is a Powerful Word&lt;/h3&gt;
+
+&lt;p&gt;Inheritance can be powerful when employed correctly, but it’s defacto usage for decades and the subsequent pain caused by the strong coupling it introduces have given developers a mantra that makes sense. Composition is a natural and unbelievably powerful technique to approach problems and build beautiful decoupled applications. But the word prefer should not be forgotten, and when we need nothing more than specialization, we should look to inheritance for assistance.&lt;/p&gt;</content><author><name>Christopher Manahan</name></author><summary type="html">Prefer composition over inheritance</summary></entry><entry><title type="html">Techniques to Manage Dependencies and Build Flexible Interfaces</title><link href="http://localhost:4000/2018/10/22/dependency-and-interface-techniques.html" rel="alternate" type="text/html" title="Techniques to Manage Dependencies and Build Flexible Interfaces" /><published>2018-10-22T00:00:00-04:00</published><updated>2018-10-22T00:00:00-04:00</updated><id>http://localhost:4000/2018/10/22/dependency-and-interface-techniques</id><content type="html" xml:base="http://localhost:4000/2018/10/22/dependency-and-interface-techniques.html">&lt;p&gt;Seemingly innocuous code can often be hiding design decisions that will only rear their ugly head as a project morphs and grows over time. When working on a class that represents apartments in a building, it is quite easy to lock your code into a myriad of strangling dependencies and a rigid interface.&lt;/p&gt;
 
 &lt;p&gt;We begin our journey into flexing good design techniques with a gets-the-job-done building class.&lt;/p&gt;
 
@@ -191,21 +315,26 @@
     &lt;span class=&quot;vi&quot;&gt;@apartments&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apartments&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;apartments&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_enum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:each&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Modify apartments here before fn call&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;apartments&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
   &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
 &lt;span class=&quot;c1&quot;&gt;# Check if an entire building is furnished&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;all_rooms_furnished?&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;building&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:furnished&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;all_rooms_furnished?&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;building&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apartments&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; 
+  &lt;span class=&quot;n&quot;&gt;apartments&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:furnished&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
 &lt;span class=&quot;c1&quot;&gt;# Find all apartments bigger than 3000 sq feet&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;bigger_than_3000_sq_ft&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;building&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;apartment&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;apartment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;n&quot;&gt;bigger_than_3000_sq_ft&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;building&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apartments&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; 
+  &lt;span class=&quot;n&quot;&gt;apartments&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;apartment&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;apartment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Through inversion of control we have exposed every method that can act on an enumerable to clients of building and the public interface of apartment provides documentation for the parameters that are available. This has drastically reduced the size of the public interface and has allowed clients to send messages to building that specify how &lt;em&gt;they&lt;/em&gt; want to receive the target apartments instead of having to deal with a predefined response.&lt;/p&gt;
+&lt;p&gt;Through inversion of control we have exposed a method that can accept anonymous functions that act on the apartments enumerable to clients of building. The public interface of apartment provides documentation for the parameters that are available to the client. This has drastically reduced the size of the public interface and has allowed clients to send messages to building that specify how &lt;em&gt;they&lt;/em&gt; want to receive the target apartments instead of having to deal with a predefined response. This also allows us to keep our implementation of apartments private and manipulate the apartments before calling the anonymous function passed to get if desired.&lt;/p&gt;
 
 &lt;p&gt;These techniques can be applied to transfrom rigid classes with hidden internal dependencies into flexible, modular classes that can be passed into applications without worry. Managing dependencies and crafting flexible interfaces are two key design perspectives that will prevent an application from crystallizing into a codebase that is resistant or even impossible to change. Our software should be open to extension and closed to modification and flexible, modular code defines a path toward this goal.&lt;/p&gt;</content><author><name>Christopher Manahan</name></author><summary type="html">Seemingly innocuous code can often be hiding design decisions that will only rear their ugly head as a project morphs and grows over time. When working on a class that represents apartments in a building, it is quite easy to lock your code into a myriad of strangling dependencies and a rigid interface.</summary></entry><entry><title type="html">Experimenting with the Single Responsibility Principle</title><link href="http://localhost:4000/2018/10/17/experimenting-with-the-single-responsibility-principle.html" rel="alternate" type="text/html" title="Experimenting with the Single Responsibility Principle" /><published>2018-10-17T00:00:00-04:00</published><updated>2018-10-17T00:00:00-04:00</updated><id>http://localhost:4000/2018/10/17/experimenting-with-the-single-responsibility-principle</id><content type="html" xml:base="http://localhost:4000/2018/10/17/experimenting-with-the-single-responsibility-principle.html">&lt;p&gt;When we want to probe the real world to understand how it works we often rely on instruments that can measure with a precision that far exceeds our own subjective capabilities. We use thermometers to ascertain a numeric representation of what we would term hot or cold. When developing software we have a tool that allows us to probe our code to understand how it works. This tool is unit testing.&lt;/p&gt;
 

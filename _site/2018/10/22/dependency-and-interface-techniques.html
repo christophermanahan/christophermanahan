@@ -238,21 +238,26 @@
     <span class="vi">@apartments</span> <span class="o">=</span> <span class="n">apartments</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">list</span>
-    <span class="n">apartments</span><span class="p">.</span><span class="nf">to_enum</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+    <span class="c1"># Modify apartments here before fn call</span>
+    <span class="n">fn</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">apartments</span><span class="p">)</span>
   <span class="k">end</span>
   <span class="o">...</span>
 <span class="k">end</span>
 
 <span class="c1"># Check if an entire building is furnished</span>
-<span class="n">all_rooms_furnished?</span> <span class="o">=</span> <span class="n">building</span><span class="p">.</span><span class="nf">list</span><span class="p">.</span><span class="nf">all?</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:furnished</span><span class="p">)</span>
+<span class="n">all_rooms_furnished?</span> <span class="o">=</span> <span class="n">building</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="o">-&gt;</span> <span class="n">apartments</span> <span class="p">{</span> 
+  <span class="n">apartments</span><span class="p">.</span><span class="nf">all?</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:furnished</span><span class="p">)</span> 
+<span class="p">}</span>
 
 <span class="c1"># Find all apartments bigger than 3000 sq feet</span>
-<span class="n">bigger_than_3000_sq_ft</span> <span class="o">=</span> <span class="n">building</span><span class="p">.</span><span class="nf">list</span><span class="p">.</span><span class="nf">select</span> <span class="k">do</span> <span class="o">|</span><span class="n">apartment</span><span class="o">|</span>
-  <span class="n">apartment</span><span class="p">.</span><span class="nf">size</span> <span class="o">&gt;</span> <span class="mi">3000</span>
-<span class="k">end</span></code></pre></figure>
+<span class="n">bigger_than_3000_sq_ft</span> <span class="o">=</span> <span class="n">building</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="o">-&gt;</span> <span class="n">apartments</span> <span class="p">{</span> 
+  <span class="n">apartments</span><span class="p">.</span><span class="nf">select</span> <span class="k">do</span> <span class="o">|</span><span class="n">apartment</span><span class="o">|</span>
+    <span class="n">apartment</span><span class="p">.</span><span class="nf">size</span> <span class="o">&gt;</span> <span class="mi">3000</span>
+  <span class="k">end</span> 
+<span class="p">})</span></code></pre></figure>
 
-<p>Through inversion of control we have exposed every method that can act on an enumerable to clients of building and the public interface of apartment provides documentation for the parameters that are available. This has drastically reduced the size of the public interface and has allowed clients to send messages to building that specify how <em>they</em> want to receive the target apartments instead of having to deal with a predefined response.</p>
+<p>Through inversion of control we have exposed a method that can accept anonymous functions that act on the apartments enumerable to clients of building. The public interface of apartment provides documentation for the parameters that are available to the client. This has drastically reduced the size of the public interface and has allowed clients to send messages to building that specify how <em>they</em> want to receive the target apartments instead of having to deal with a predefined response. This also allows us to keep our implementation of apartments private and manipulate the apartments before calling the anonymous function passed to get if desired.</p>
 
 <p>These techniques can be applied to transfrom rigid classes with hidden internal dependencies into flexible, modular classes that can be passed into applications without worry. Managing dependencies and crafting flexible interfaces are two key design perspectives that will prevent an application from crystallizing into a codebase that is resistant or even impossible to change. Our software should be open to extension and closed to modification and flexible, modular code defines a path toward this goal.</p>
 

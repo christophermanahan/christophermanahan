@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Composition and Inheritance | TBD</title>
+<meta name="generator" content="Jekyll v3.8.4" />
+<meta property="og:title" content="Composition and Inheritance" />
+<meta name="author" content="Christopher Manahan" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Prefer composition over inheritance" />
+<meta property="og:description" content="Prefer composition over inheritance" />
+<link rel="canonical" href="http://localhost:4000/2018/11/02/composition-and-inheritance.html" />
+<meta property="og:url" content="http://localhost:4000/2018/11/02/composition-and-inheritance.html" />
+<meta property="og:site_name" content="TBD" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-11-02T00:00:00-04:00" />
+<script type="application/ld+json">
+{"description":"Prefer composition over inheritance","author":{"@type":"Person","name":"Christopher Manahan"},"@type":"BlogPosting","url":"http://localhost:4000/2018/11/02/composition-and-inheritance.html","headline":"Composition and Inheritance","dateModified":"2018-11-02T00:00:00-04:00","datePublished":"2018-11-02T00:00:00-04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/11/02/composition-and-inheritance.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="TBD" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">TBD</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Composition and Inheritance</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-11-02T00:00:00-04:00" itemprop="datePublished">Nov 2, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <blockquote>
+  <p>Prefer composition over inheritance</p>
+</blockquote>
+
+<p>Software mantras can often lead developers into believing that design philosphies are laws that cannot be broken. In particular, favoring composition over inheritance tends to often be morphed into ‘never inheritance.’ And while this may be a backlash to generations of programs that caused developers to experience a kind of pain that can only be brought about by the intense coupling created by misapplying inheritance, the mantra is surprisingly robust, and has few exceptions.</p>
+
+<h3 id="composition-is-natural">Composition is Natural</h3>
+
+<blockquote>
+  <p>How to break a problem down in order to build a solution up</p>
+</blockquote>
+
+<p>Composition tends to align well with how humans like to understand the natural world. When we encounter a complex problem, a proven approach throughout history is to ask, ‘Can we break this into smaller, approachable pieces?’ This is the take smaller bites until you can chew approach. Composition allows us to gradually build up objects in our mind and creates clear delineations that allow for magical properties like the ability to test small units and their interactions with one another.</p>
+
+<h4 id="composition-in-the-analog-world">Composition in the Analog World</h4>
+
+<p>Creating software without the use of composition would be like trying to reason about a car as one mass entity. When dealing with the complexities of an automobile it helps to think in terms of its subsquent parts. And even those subsequent parts can be broken down further. An engine is responsible for turning a drive shaft. But an engine is made up of, among other things, a fuel injector for creating aerosolized gasoline, a spark plug for igniting the aerosol, and cylinders inside of pistons to take advantage of the force generated by the subsequent explosion.</p>
+
+<p>Breaking the engine down into it’s components allows us not just to reason about how it works, but reason about how to design it in the first place. Instead of asking how to rotate a drive shaft we can ask, how can I efficiently create a force, and how can I use the force to accomplish a rotation. Someone answered “small explosions” and the rest is history.</p>
+
+<h4 id="composition-in-the-digital-world">Composition in the Digital World</h4>
+
+<p>When building a game like Tic Tac Toe composition plays a simlar role in reasoning about how to break a problem down in order to build a solution up. If we simply think of tic tac toe as a game with rules we have no idea where to start building a solution. But by breaking it down we can start to reason about the various components in play. The game takes place on a board. There are players that wield symbols. The game has rules, and so on. Each of these individual pieces may also be composed of smaller, more digestable (and testable!) pieces.</p>
+
+<p>Composition also promotes the use of polymorphism and duck typing to provide a variety of behaviors that can be injected as dependencies into higher level classes that expect a certain interface. These concepts promote generalized and robust solutions that follow another useful mantra of software design.</p>
+
+<blockquote>
+  <p>Code to an interface, not an implementation</p>
+</blockquote>
+
+<p>So with all of this praise for composition, are there use cases for inheritance, or is it an old dinosaur of software design mucking up the compilers of enterprise loved languages like Java and C#?</p>
+
+<h3 id="the-dark-art-of-inheritance">The Dark Art of Inheritance</h3>
+
+<p>Inheritance provides a syntax supported, directed way to share behavior between classes. Inheritance achieves this by providing <em>automatic message forwarding</em>. Inheritance functions by allowing developers to create subclass-superclass relationships, or more naturally, parent-child relationships. Children of superclasses <em>inherit</em> all of the behavior of the parent class, and add their own behavior into the mix. With this inheritance comes the responsibility to anticipate changes to the parent classes interface and thus the problems emerge.</p>
+
+<blockquote>
+  <p>Inheritance creates strong coupling between the parent and child</p>
+</blockquote>
+
+<p>Whenever changes to the parent classes public interface are performed, all child classes must be altered to accomodate the change. This means that developers must be extremely careful to manage their dependencies. Superclasses should only be abstracted when they are <em>unlikely to change</em>. From a similar perspective, if adhering to the dependency inversion principle, superclasses should be <em>less</em> likely to change than their children. In addition, because children inherit <em>all</em> of the public behavior of their parent, if we are to adhere to the Liskov substitution principle, we should only abstract superclasses when we are sure that the superclass behavior will be shared <em>and</em> used by all of it’s children.</p>
+
+<p>So with a careful mindset, when should we proceed forward with the decision to utilize the seemingly dark art of inheritance?</p>
+
+<h4 id="inheritance-is-special">Inheritance is special</h4>
+
+<p>Inheritance can be extremely useful when we desire <em>specialization</em>. If we discover that we have a class that has a single responsibility and our goal is to make a variety of different variations on that class that will all utilize the behavior provided by our SRP abiding parent, we have a strong argument to apply inheritance.</p>
+
+<p>The trick is to recognize when our classes are specializations of a generalization, and not when we simply want to share some behavior between classes.</p>
+
+<p>Inheritance is a feature in many programming languages because it is useful to employ hierarchies when building data types. In Ruby, everything is an object. Whether it is a string or an integer, every value is an object and therefore is imbued with behavior. This provides a classic use case for inheritance, where it provides <em>consistency</em> and a clear direction for the relationships among classes. All data types in Ruby forward messages that cannot be found within their own handlers to their superclass. This allowed the designers of the language to provide common behavior to <em>every</em> data type in Ruby, and model everything as objects.</p>
+
+<h3 id="prefer-is-a-powerful-word">Prefer is a Powerful Word</h3>
+
+<p>Inheritance can be powerful when employed correctly, but it’s defacto usage for decades and the subsequent pain caused by the strong coupling it introduces have given developers a mantra that makes sense. Composition is a natural and unbelievably powerful technique to approach problems and build beautiful decoupled applications. But the word prefer should not be forgotten, and when we need nothing more than specialization, we should look to inheritance for assistance.</p>
+
+  </div><a class="u-url" href="/2018/11/02/composition-and-inheritance.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TBD</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Christopher Manahan</li><li><a class="u-email" href="mailto:cmanahan@8thlight.com">cmanahan@8thlight.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/christophermanahan"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">christophermanahan</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Documenting the journey of a new apprentice @ 8th Light
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
