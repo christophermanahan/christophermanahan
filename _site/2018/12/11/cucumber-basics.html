@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Cucumber Basics | TBD</title>
+<meta name="generator" content="Jekyll v3.8.4" />
+<meta property="og:title" content="Cucumber Basics" />
+<meta name="author" content="Christopher Manahan" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Basics" />
+<meta property="og:description" content="Basics" />
+<link rel="canonical" href="http://localhost:4000/2018/12/11/cucumber-basics.html" />
+<meta property="og:url" content="http://localhost:4000/2018/12/11/cucumber-basics.html" />
+<meta property="og:site_name" content="TBD" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-12-11T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Basics","author":{"@type":"Person","name":"Christopher Manahan"},"@type":"BlogPosting","url":"http://localhost:4000/2018/12/11/cucumber-basics.html","headline":"Cucumber Basics","dateModified":"2018-12-11T00:00:00-05:00","datePublished":"2018-12-11T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/12/11/cucumber-basics.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="TBD" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">TBD</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Cucumber Basics</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-12-11T00:00:00-05:00" itemprop="datePublished">Dec 11, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3 id="basics">Basics</h3>
+
+<p>Cucumber is an acceptance testing framework. Let’s dive in.</p>
+
+<p>Cucumber utilizes a hierarchical testing structure to create readable, read-like-a-sentence representations of what your application should do. It reads in plain text files written in a language called Gherkin. Each file represents a <em>feature</em> of your system and contain a variety of <em>scenarios</em> that will be tested.</p>
+
+<p>These scenarios are defined by <em>step definitions</em> which serve as the connective tissue between the sentence describing the scenario and the runnable <em>support code</em> that tests that the feature has been implemented properly.  This support code is specific to the domain of your system (POSTing to a server, Triggering an onClick event in the UI).</p>
+
+<h3 id="features">Features</h3>
+
+<p>Every Gherkin file represents a feature and begins with the <em>feature</em> keyword. Features may be follwed by an optional description. The description is a deep dive that precisely describes the intent and purpose of a feature and includes any details that are relevant to it’s acceptance criteria.</p>
+
+<p>Features contain several different scenarios which are representative of the different states a system may have to deal with and hopefully provide coverage over edge cases and distinct behavior that must be implemented.</p>
+
+<h3 id="scenario">Scenario</h3>
+
+<p>Scenario’s represent a specific scenario that describe how the system should behave when presented with a certain situration. In order to get a scenario to pass, the system’s behavior must adhere to the scenario’s outline.</p>
+
+<p>Scenarios are made up of three steps that are analagous to the <em>Arrange</em>, <em>Act</em>, <em>Assert</em> paradigm found in unit testing.</p>
+<ol>
+  <li>Manipulate the system to be in a certain state</li>
+  <li>Instruct the system to perform the behavior to be tested</li>
+  <li>Verify the subsequent state of the system</li>
+</ol>
+
+<p>These three steps can be constructed in sentence-like structure using the keywords <em>Given</em>, <em>When</em>, and <em>Then</em>. In addition, <em>And</em> and <em>But</em> can be interwoven into these steps to increase the expressiveness of the scenario.</p>
+
+<figure class="highlight"><pre><code class="language-cucumber" data-lang="cucumber"><span class="nf">Given </span>I ordered a taco through the app yesterday
+<span class="nf">And </span>I am a tacohort rewards member
+<span class="nf">When </span>I order a taco today
+<span class="nf">Then </span>I should get a 10% Discount</code></pre></figure>
+
+<p>As in any proper testing environment, cucumber scenarios should be independent of one another and not depend on the status of any other scenario.</p>
+
+<h3 id="step-definitions">Step Definitions</h3>
+
+<p>Step defintions serve as the binding between Gherkin scenarios and the concrete implementation of the actions that will be performed in order to test the system. Step definitions describe how your support code should manipulate the system, but do not perform these manipulations themselves. They are kept distinct from the support code that will actually poke and prod the system.</p>
+
+<p>Step defintions bridge this gap between the scenario and support code by using string matching to extract the relevant information from the scenario written in Gherkin and provide them to the support code. This is most commonly executed using regular expressions (regex).</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Given</span> <span class="sr">/^I have bought \$(\d+) worth of tacos (\d+) days ago$/</span> <span class="k">do</span> <span class="o">|</span><span class="n">amount</span><span class="p">,</span> <span class="n">days</span><span class="o">|</span>
+  <span class="c1"># TODO: code goes here</span>
+<span class="no">End</span></code></pre></figure>
+
+<p>While regular expressions are outside of the scope of this post, this presentation by Lea Verou provides a fast-paced wealth of information that covers everything you need to know in order to get started using regex in your Gherkin scenarios!</p>
+
+<p><a href="http://www.youtube.com/watch?feature=player_embedded&amp;v=EkluES9Rvak&amp;t " target="_blank"><img src="http://i3.ytimg.com/vi/EkluES9Rvak/maxresdefault.jpg" alt="IMAGE ALT TEXT HERE" width="240" height="180" style="display:block;margin:auto" /></a></p>
+
+<p>The <em>^</em> and <em>$</em> symbols serve as anchors that specify the beginning and end of the scenario snippet.</p>
+
+<p>Another useful feature that allows writing out a series of tests that will all live at the same level of abstraction before coding their concrete support code implementation is <em>pending</em>.  Pending allows you to specify what the concrete implementation will do and then move onto writing the next test so that the behavior of the system at this level can be fully specified before implementing the support code.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Given</span> <span class="sr">/^I have bought \$(\d+) of tacos$/</span> <span class="k">do</span> <span class="o">|</span><span class="n">amount</span><span class="o">|</span> 
+  <span class="n">pending</span><span class="p">(</span><span class="s2">"Need to design the purchase history interface"</span><span class="p">)</span> 
+<span class="k">end</span>
+<span class="no">When</span> <span class="sr">/^I buy \$(\d+)$/</span> <span class="n">worth</span> <span class="n">of</span> <span class="n">tacos</span> <span class="k">do</span> <span class="o">|</span><span class="n">amount</span><span class="o">|</span> 
+  <span class="n">pending</span><span class="p">(</span><span class="s2">"How do we withdraw funds?"</span><span class="p">)</span> 
+<span class="k">end</span> </code></pre></figure>
+
+<h3 id="expressive-scenarios">Expressive Scenarios</h3>
+
+<p>Cucumber includes several more key features that allow developers to write expressive scenarios that focus on the important and relevant information about the system under test.</p>
+
+<h4 id="backgrounds">Backgrounds</h4>
+
+<p>Backgrounds are a section in the feature file that allow you to express steps that are common to the scenarios that will be tested. This is analagous to the beforeEach paradigm in unit testing and serves a similar purpose. Backgrounds isolate setup code so that it must only be changed in one place and allow the reader to focus on the unique and relevant behavior in each scenario. This increases readability but also has the potential to be abused and cause the reader to jump back and forth between a complicated setup routine and the outline in the scenario.</p>
+
+<blockquote>
+  <p>You want to be in a single responsibility mindset when designing feature tests.</p>
+</blockquote>
+
+<p>This can be avoided by keeping backgrounds simple and short. If you find your background becoming convoluted it may be a sign that you are testing more than one feature in the file. You want to be in a single responsibility mindset when designing feature tests. In addition, technical details like opening and closing sockets or pinging third party API’s belong in your support code and not in your backgrounds.</p>
+
+<h4 id="data-tables">Data Tables</h4>
+
+<p>Data tables allow Cucumber users to describe more complex, potentially multi-dimensional data in a format that would not map well to the single lines that <em>Given</em>, <em>When</em>, and <em>Then</em> require.  They can represent larger data and if you find yourself writing <em>Given</em>… <em>And</em>… <em>And</em>… <em>And</em>… then it may be a signal that a data table could increase your test expressiveness.</p>
+
+<figure class="highlight"><pre><code class="language-cucumber" data-lang="cucumber"><span class="err">Given these tacos</span><span class="p">:</span>
+  <span class="p">|</span> <span class="nv">Wrapper</span> <span class="p">|</span> <span class="nv">Filling</span> <span class="p">|</span>
+  <span class="p">|</span> <span class="n">Hard</span> <span class="p">|</span> <span class="n">Carnitas</span> <span class="p">|</span>
+  <span class="p">|</span> <span class="n">Soft</span> <span class="p">|</span> <span class="n">Sofritas</span> <span class="p">|</span>
+  <span class="p">|</span> <span class="n">Soft</span> <span class="p">|</span> <span class="n">Beans</span> <span class="p">|</span>
+<span class="err">Then the shopping cart should contain</span><span class="p">:</span>
+  <span class="p">|</span> <span class="nv">Type</span> <span class="p">|</span> <span class="nv">Price</span> <span class="p">|</span>
+  <span class="p">|</span> <span class="n">Meat</span> <span class="p">|</span> <span class="n">4.95</span> <span class="p">|</span>
+  <span class="p">|</span> <span class="n">Tofu</span> <span class="p">|</span> <span class="n">4.25</span> <span class="p">|</span>
+  <span class="p">|</span> <span class="n">Veggie</span> <span class="p">|</span> <span class="n">3.55</span> <span class="p">|</span></code></pre></figure>
+
+<h4 id="scenario-outlines">Scenario Outlines</h4>
+
+<p>Scenario outlines allow Cucumber users to extract various input values and/or expected outcomes from scenarios that follow a common set of steps.</p>
+
+<figure class="highlight"><pre><code class="language-cucumber" data-lang="cucumber"><span class="kn">Scenario Outline</span><span class="p">:</span> Buy tacos
+  <span class="nf">Given </span>I have <span class="nv">&lt;Balance&gt;</span> tacopoints
+  <span class="nf">When </span>I buy <span class="nv">&lt;Amount&gt;</span> tacos
+  <span class="nf">Then </span>I should receive <span class="nv">&lt;Additional&gt;</span> tacopoints
+  <span class="nf">And </span>The balance of my account should be <span class="nv">&lt;Updated&gt;</span>
+  <span class="nn">Examples</span><span class="p">:</span>
+    <span class="p">|</span> <span class="nv">Balance</span> <span class="p">|</span> <span class="nv">Amount</span> <span class="p">|</span> <span class="nv">Additional</span> <span class="p">|</span> <span class="nv">Updated</span> <span class="p">|</span>
+    <span class="p">|</span> <span class="n">500</span> <span class="p">|</span> <span class="n">1</span> <span class="p">|</span> <span class="n">50</span> <span class="p">|</span> <span class="n">550</span> <span class="p">|</span>
+    <span class="p">|</span> <span class="n">1000</span> <span class="p">|</span> <span class="n">10</span> <span class="p">|</span> <span class="n">550</span> <span class="p">|</span> <span class="n">1550</span> <span class="p">|</span></code></pre></figure>
+
+<p><em>Placeholders</em> are indicated in the scenario outline using angle brackets and serve as variables that can be assigned in the example section of the scenario. You also have the ability to use multiple different tables to test different but related behavior, such as valid and invalid setups.</p>
+
+<h3 id="step-definition-internals">Step Definition Internals</h3>
+
+<p>A step definition begins by capturing the variable definitions that were defined in the Gherkin test scenarios. Once these variables have been defined they are used to set the system under test into a particular configuration state.  This is often achieved through including libraries in the support code but the system can also be tested using your own custom support code. The step definition can use your support code to poke and prod the system under test. After the captured information has been used to instantiate the support code and the system under tests the relevant methods that will test the system should be called and the support code should be utilized to test the system. A unit testing framework can then be used to verify the results and the acceptance testing cycle for a step is complete.</p>
+
+<p>These steps break down as follows:</p>
+
+<ol>
+  <li>Capture relevant information from the Gherkin test scenario</li>
+  <li>Use this information to configure the system under test and the support code that will poke the system</li>
+  <li>Capture the results of poking the system</li>
+  <li>Verify these results against the expected outcome using assertions</li>
+</ol>
+
+<p>Examples of support code could include an HTTPRequest that can connect to the server using an HTTP Library or a custom socket connection and return an HTTP Response that could be verified using an xUnit framework against the expected response.</p>
+
+<h4 id="conclusion">Conclusion</h4>
+
+<p>Cucumber is a powerful acceptance testing framework that allows plain text language to express powerful and expressive scenarios that can drive the BDD test cycle.</p>
+
+<p>The Cucumber Book is an excellent resource for further reading and code examples on how to use Cucumber with your next project.</p>
+
+<p>Working with expressive acceptance tests provides a bridge between developers, clients, and business stakeholders and allows effective communication of requirements and acceptance criteria making your development cycle more efficient and less prone to rewrites!</p>
+
+  </div><a class="u-url" href="/2018/12/11/cucumber-basics.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TBD</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Christopher Manahan</li><li><a class="u-email" href="mailto:cmanahan@8thlight.com">cmanahan@8thlight.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/christophermanahan"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">christophermanahan</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Documenting the journey of a new apprentice @ 8th Light
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

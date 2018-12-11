@@ -1,5 +1,130 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-07T11:49:37-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">TBD</title><subtitle>Documenting the journey of a new apprentice @ 8th Light
-</subtitle><author><name>Christopher Manahan</name></author><entry><title type="html">Dependency Inversion</title><link href="http://localhost:4000/2018/12/07/dependency-inversion.html" rel="alternate" type="text/html" title="Dependency Inversion" /><published>2018-12-07T00:00:00-05:00</published><updated>2018-12-07T00:00:00-05:00</updated><id>http://localhost:4000/2018/12/07/dependency-inversion</id><content type="html" xml:base="http://localhost:4000/2018/12/07/dependency-inversion.html">&lt;ul&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-11T16:14:48-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">TBD</title><subtitle>Documenting the journey of a new apprentice @ 8th Light
+</subtitle><author><name>Christopher Manahan</name></author><entry><title type="html">Cucumber Basics</title><link href="http://localhost:4000/2018/12/11/cucumber-basics.html" rel="alternate" type="text/html" title="Cucumber Basics" /><published>2018-12-11T00:00:00-05:00</published><updated>2018-12-11T00:00:00-05:00</updated><id>http://localhost:4000/2018/12/11/cucumber-basics</id><content type="html" xml:base="http://localhost:4000/2018/12/11/cucumber-basics.html">&lt;h3 id=&quot;basics&quot;&gt;Basics&lt;/h3&gt;
+
+&lt;p&gt;Cucumber is an acceptance testing framework. Let’s dive in.&lt;/p&gt;
+
+&lt;p&gt;Cucumber utilizes a hierarchical testing structure to create readable, read-like-a-sentence representations of what your application should do. It reads in plain text files written in a language called Gherkin. Each file represents a &lt;em&gt;feature&lt;/em&gt; of your system and contain a variety of &lt;em&gt;scenarios&lt;/em&gt; that will be tested.&lt;/p&gt;
+
+&lt;p&gt;These scenarios are defined by &lt;em&gt;step definitions&lt;/em&gt; which serve as the connective tissue between the sentence describing the scenario and the runnable &lt;em&gt;support code&lt;/em&gt; that tests that the feature has been implemented properly.  This support code is specific to the domain of your system (POSTing to a server, Triggering an onClick event in the UI).&lt;/p&gt;
+
+&lt;h3 id=&quot;features&quot;&gt;Features&lt;/h3&gt;
+
+&lt;p&gt;Every Gherkin file represents a feature and begins with the &lt;em&gt;feature&lt;/em&gt; keyword. Features may be follwed by an optional description. The description is a deep dive that precisely describes the intent and purpose of a feature and includes any details that are relevant to it’s acceptance criteria.&lt;/p&gt;
+
+&lt;p&gt;Features contain several different scenarios which are representative of the different states a system may have to deal with and hopefully provide coverage over edge cases and distinct behavior that must be implemented.&lt;/p&gt;
+
+&lt;h3 id=&quot;scenario&quot;&gt;Scenario&lt;/h3&gt;
+
+&lt;p&gt;Scenario’s represent a specific scenario that describe how the system should behave when presented with a certain situration. In order to get a scenario to pass, the system’s behavior must adhere to the scenario’s outline.&lt;/p&gt;
+
+&lt;p&gt;Scenarios are made up of three steps that are analagous to the &lt;em&gt;Arrange&lt;/em&gt;, &lt;em&gt;Act&lt;/em&gt;, &lt;em&gt;Assert&lt;/em&gt; paradigm found in unit testing.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Manipulate the system to be in a certain state&lt;/li&gt;
+  &lt;li&gt;Instruct the system to perform the behavior to be tested&lt;/li&gt;
+  &lt;li&gt;Verify the subsequent state of the system&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;These three steps can be constructed in sentence-like structure using the keywords &lt;em&gt;Given&lt;/em&gt;, &lt;em&gt;When&lt;/em&gt;, and &lt;em&gt;Then&lt;/em&gt;. In addition, &lt;em&gt;And&lt;/em&gt; and &lt;em&gt;But&lt;/em&gt; can be interwoven into these steps to increase the expressiveness of the scenario.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cucumber&quot; data-lang=&quot;cucumber&quot;&gt;&lt;span class=&quot;nf&quot;&gt;Given &lt;/span&gt;I ordered a taco through the app yesterday
+&lt;span class=&quot;nf&quot;&gt;And &lt;/span&gt;I am a tacohort rewards member
+&lt;span class=&quot;nf&quot;&gt;When &lt;/span&gt;I order a taco today
+&lt;span class=&quot;nf&quot;&gt;Then &lt;/span&gt;I should get a 10% Discount&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;As in any proper testing environment, cucumber scenarios should be independent of one another and not depend on the status of any other scenario.&lt;/p&gt;
+
+&lt;h3 id=&quot;step-definitions&quot;&gt;Step Definitions&lt;/h3&gt;
+
+&lt;p&gt;Step defintions serve as the binding between Gherkin scenarios and the concrete implementation of the actions that will be performed in order to test the system. Step definitions describe how your support code should manipulate the system, but do not perform these manipulations themselves. They are kept distinct from the support code that will actually poke and prod the system.&lt;/p&gt;
+
+&lt;p&gt;Step defintions bridge this gap between the scenario and support code by using string matching to extract the relevant information from the scenario written in Gherkin and provide them to the support code. This is most commonly executed using regular expressions (regex).&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;Given&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/^I have bought \$(\d+) worth of tacos (\d+) days ago$/&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;days&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# TODO: code goes here&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;End&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;While regular expressions are outside of the scope of this post, this presentation by Lea Verou provides a fast-paced wealth of information that covers everything you need to know in order to get started using regex in your Gherkin scenarios!&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.youtube.com/watch?feature=player_embedded&amp;amp;v=EkluES9Rvak&amp;amp;t &quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;http://i3.ytimg.com/vi/EkluES9Rvak/maxresdefault.jpg&quot; alt=&quot;IMAGE ALT TEXT HERE&quot; width=&quot;240&quot; height=&quot;180&quot; style=&quot;display:block;margin:auto&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The &lt;em&gt;^&lt;/em&gt; and &lt;em&gt;$&lt;/em&gt; symbols serve as anchors that specify the beginning and end of the scenario snippet.&lt;/p&gt;
+
+&lt;p&gt;Another useful feature that allows writing out a series of tests that will all live at the same level of abstraction before coding their concrete support code implementation is &lt;em&gt;pending&lt;/em&gt;.  Pending allows you to specify what the concrete implementation will do and then move onto writing the next test so that the behavior of the system at this level can be fully specified before implementing the support code.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;Given&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/^I have bought \$(\d+) of tacos$/&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+  &lt;span class=&quot;n&quot;&gt;pending&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Need to design the purchase history interface&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;When&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/^I buy \$(\d+)$/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;worth&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tacos&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; 
+  &lt;span class=&quot;n&quot;&gt;pending&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;How do we withdraw funds?&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;expressive-scenarios&quot;&gt;Expressive Scenarios&lt;/h3&gt;
+
+&lt;p&gt;Cucumber includes several more key features that allow developers to write expressive scenarios that focus on the important and relevant information about the system under test.&lt;/p&gt;
+
+&lt;h4 id=&quot;backgrounds&quot;&gt;Backgrounds&lt;/h4&gt;
+
+&lt;p&gt;Backgrounds are a section in the feature file that allow you to express steps that are common to the scenarios that will be tested. This is analagous to the beforeEach paradigm in unit testing and serves a similar purpose. Backgrounds isolate setup code so that it must only be changed in one place and allow the reader to focus on the unique and relevant behavior in each scenario. This increases readability but also has the potential to be abused and cause the reader to jump back and forth between a complicated setup routine and the outline in the scenario.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;You want to be in a single responsibility mindset when designing feature tests.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This can be avoided by keeping backgrounds simple and short. If you find your background becoming convoluted it may be a sign that you are testing more than one feature in the file. You want to be in a single responsibility mindset when designing feature tests. In addition, technical details like opening and closing sockets or pinging third party API’s belong in your support code and not in your backgrounds.&lt;/p&gt;
+
+&lt;h4 id=&quot;data-tables&quot;&gt;Data Tables&lt;/h4&gt;
+
+&lt;p&gt;Data tables allow Cucumber users to describe more complex, potentially multi-dimensional data in a format that would not map well to the single lines that &lt;em&gt;Given&lt;/em&gt;, &lt;em&gt;When&lt;/em&gt;, and &lt;em&gt;Then&lt;/em&gt; require.  They can represent larger data and if you find yourself writing &lt;em&gt;Given&lt;/em&gt;… &lt;em&gt;And&lt;/em&gt;… &lt;em&gt;And&lt;/em&gt;… &lt;em&gt;And&lt;/em&gt;… then it may be a signal that a data table could increase your test expressiveness.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cucumber&quot; data-lang=&quot;cucumber&quot;&gt;&lt;span class=&quot;err&quot;&gt;Given these tacos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Wrapper&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Filling&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Hard&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Carnitas&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Soft&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Sofritas&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Soft&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Beans&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;Then the shopping cart should contain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Type&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Price&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Meat&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;4.95&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Tofu&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;4.25&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Veggie&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;3.55&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;scenario-outlines&quot;&gt;Scenario Outlines&lt;/h4&gt;
+
+&lt;p&gt;Scenario outlines allow Cucumber users to extract various input values and/or expected outcomes from scenarios that follow a common set of steps.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-cucumber&quot; data-lang=&quot;cucumber&quot;&gt;&lt;span class=&quot;kn&quot;&gt;Scenario Outline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; Buy tacos
+  &lt;span class=&quot;nf&quot;&gt;Given &lt;/span&gt;I have &lt;span class=&quot;nv&quot;&gt;&amp;lt;Balance&amp;gt;&lt;/span&gt; tacopoints
+  &lt;span class=&quot;nf&quot;&gt;When &lt;/span&gt;I buy &lt;span class=&quot;nv&quot;&gt;&amp;lt;Amount&amp;gt;&lt;/span&gt; tacos
+  &lt;span class=&quot;nf&quot;&gt;Then &lt;/span&gt;I should receive &lt;span class=&quot;nv&quot;&gt;&amp;lt;Additional&amp;gt;&lt;/span&gt; tacopoints
+  &lt;span class=&quot;nf&quot;&gt;And &lt;/span&gt;The balance of my account should be &lt;span class=&quot;nv&quot;&gt;&amp;lt;Updated&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nn&quot;&gt;Examples&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Balance&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Amount&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Additional&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;Updated&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;500&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;50&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;550&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;550&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;1550&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;em&gt;Placeholders&lt;/em&gt; are indicated in the scenario outline using angle brackets and serve as variables that can be assigned in the example section of the scenario. You also have the ability to use multiple different tables to test different but related behavior, such as valid and invalid setups.&lt;/p&gt;
+
+&lt;h3 id=&quot;step-definition-internals&quot;&gt;Step Definition Internals&lt;/h3&gt;
+
+&lt;p&gt;A step definition begins by capturing the variable definitions that were defined in the Gherkin test scenarios. Once these variables have been defined they are used to set the system under test into a particular configuration state.  This is often achieved through including libraries in the support code but the system can also be tested using your own custom support code. The step definition can use your support code to poke and prod the system under test. After the captured information has been used to instantiate the support code and the system under tests the relevant methods that will test the system should be called and the support code should be utilized to test the system. A unit testing framework can then be used to verify the results and the acceptance testing cycle for a step is complete.&lt;/p&gt;
+
+&lt;p&gt;These steps break down as follows:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Capture relevant information from the Gherkin test scenario&lt;/li&gt;
+  &lt;li&gt;Use this information to configure the system under test and the support code that will poke the system&lt;/li&gt;
+  &lt;li&gt;Capture the results of poking the system&lt;/li&gt;
+  &lt;li&gt;Verify these results against the expected outcome using assertions&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Examples of support code could include an HTTPRequest that can connect to the server using an HTTP Library or a custom socket connection and return an HTTP Response that could be verified using an xUnit framework against the expected response.&lt;/p&gt;
+
+&lt;h4 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h4&gt;
+
+&lt;p&gt;Cucumber is a powerful acceptance testing framework that allows plain text language to express powerful and expressive scenarios that can drive the BDD test cycle.&lt;/p&gt;
+
+&lt;p&gt;The Cucumber Book is an excellent resource for further reading and code examples on how to use Cucumber with your next project.&lt;/p&gt;
+
+&lt;p&gt;Working with expressive acceptance tests provides a bridge between developers, clients, and business stakeholders and allows effective communication of requirements and acceptance criteria making your development cycle more efficient and less prone to rewrites!&lt;/p&gt;</content><author><name>Christopher Manahan</name></author><summary type="html">Basics</summary></entry><entry><title type="html">Dependency Inversion</title><link href="http://localhost:4000/2018/12/07/dependency-inversion.html" rel="alternate" type="text/html" title="Dependency Inversion" /><published>2018-12-07T00:00:00-05:00</published><updated>2018-12-07T00:00:00-05:00</updated><id>http://localhost:4000/2018/12/07/dependency-inversion</id><content type="html" xml:base="http://localhost:4000/2018/12/07/dependency-inversion.html">&lt;ul&gt;
   &lt;li&gt;High-level modules should not depend on low-level modules. Both should depend on abstractions.
   &lt;/li&gt;
   &lt;li&gt;Abstractions should not depend upon details. Details should depend upon abstractions.&lt;/li&gt;
