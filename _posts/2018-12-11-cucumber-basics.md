@@ -10,7 +10,7 @@ Cucumber is an acceptance testing framework. Let's dive in.
 ### Basics
 
 
-Cucumber utilizes a hierarchical testing structure to create readable, read-like-a-sentence representations of what your application should do. It reads in plain text files written in a language called Gherkin. Each file represents a _feature_ of your system and contain a variety of _scenarios_ that will be tested. 
+Cucumber utilizes a hierarchical testing structure to create readable, read-like-a-sentence representations of what your application should do. It reads in plain text files written in a language called Gherkin. Each file represents a _feature_ of your system and contains a variety of _scenarios_ that will be tested. 
 
 
 These scenarios are defined by _step definitions_ which serve as the connective tissue between the sentence describing the scenario and the runnable _support code_ that tests that the feature has been implemented properly.  This support code is specific to the domain of your system (POSTing to a server, Triggering an onClick event in the UI).
@@ -18,14 +18,14 @@ These scenarios are defined by _step definitions_ which serve as the connective 
 
 ### Features
 
-Every Gherkin file represents a feature and begins with the _feature_ keyword. Features may be follwed by an optional description. The description is a deep dive that precisely describes the intent and purpose of a feature and includes any details that are relevant to it's acceptance criteria. 
+Every Gherkin file represents a feature and begins with the _feature_ keyword. Features may be followed by an optional description. The description is a deep dive that precisely describes the intent and purpose of a feature and includes any details that are relevant to it's acceptance criteria. 
 
 
 Features contain several different scenarios which are representative of the different states a system may have to deal with and hopefully provide coverage over edge cases and distinct behavior that must be implemented.
 
 ### Scenario
 
-Scenario's represent a specific scenario that describe how the system should behave when presented with a certain situration. In order to get a scenario to pass, the system's behavior must adhere to the scenario's outline.
+Scenario's represent a specific scenario that describe how the system should behave when presented with a certain situation. In order to get a scenario to pass, the system's behavior must adhere to the scenario's outline.
 
 
 Scenarios are made up of three steps that are analagous to the _Arrange_, _Act_, _Assert_ paradigm found in unit testing.
@@ -49,10 +49,10 @@ As in any proper testing environment, cucumber scenarios should be independent o
 ### Step Definitions
 
 
-Step defintions serve as the binding between Gherkin scenarios and the concrete implementation of the actions that will be performed in order to test the system. Step definitions describe how your support code should manipulate the system, but do not perform these manipulations themselves. They are kept distinct from the support code that will actually poke and prod the system.
+Step definitions serve as the binding between Gherkin scenarios and the concrete implementation of the actions that will be performed in order to test the system. Step definitions describe how your support code should manipulate the system, but do not perform these manipulations themselves. They are kept distinct from the support code that will actually poke and prod the system.
 
 
-Step defintions bridge this gap between the scenario and support code by using string matching to extract the relevant information from the scenario written in Gherkin and provide them to the support code. This is most commonly executed using regular expressions (regex).
+Step definitions bridge this gap between the scenario and support code by using string matching to extract the relevant information from the scenario written in Gherkin and provide them to the support code. This is most commonly executed using regular expressions (regex).
 
 
 {% highlight ruby %}
