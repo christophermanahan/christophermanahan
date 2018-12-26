@@ -8,15 +8,15 @@
 <meta property="og:title" content="Cucumber Basics" />
 <meta name="author" content="Christopher Manahan" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Basics" />
-<meta property="og:description" content="Basics" />
+<meta name="description" content="Cucumber is an acceptance testing framework. Let’s dive in." />
+<meta property="og:description" content="Cucumber is an acceptance testing framework. Let’s dive in." />
 <link rel="canonical" href="http://localhost:4000/2018/12/11/cucumber-basics.html" />
 <meta property="og:url" content="http://localhost:4000/2018/12/11/cucumber-basics.html" />
 <meta property="og:site_name" content="TBD" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-12-11T00:00:00-05:00" />
 <script type="application/ld+json">
-{"description":"Basics","author":{"@type":"Person","name":"Christopher Manahan"},"@type":"BlogPosting","url":"http://localhost:4000/2018/12/11/cucumber-basics.html","headline":"Cucumber Basics","dateModified":"2018-12-11T00:00:00-05:00","datePublished":"2018-12-11T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/12/11/cucumber-basics.html"},"@context":"http://schema.org"}</script>
+{"description":"Cucumber is an acceptance testing framework. Let’s dive in.","author":{"@type":"Person","name":"Christopher Manahan"},"@type":"BlogPosting","url":"http://localhost:4000/2018/12/11/cucumber-basics.html","headline":"Cucumber Basics","dateModified":"2018-12-11T00:00:00-05:00","datePublished":"2018-12-11T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/12/11/cucumber-basics.html"},"@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="TBD" /></head>
 <body><header class="site-header" role="banner">
@@ -46,23 +46,23 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <h3 id="basics">Basics</h3>
+    <p>Cucumber is an acceptance testing framework. Let’s dive in.</p>
 
-<p>Cucumber is an acceptance testing framework. Let’s dive in.</p>
+<h3 id="basics">Basics</h3>
 
-<p>Cucumber utilizes a hierarchical testing structure to create readable, read-like-a-sentence representations of what your application should do. It reads in plain text files written in a language called Gherkin. Each file represents a <em>feature</em> of your system and contain a variety of <em>scenarios</em> that will be tested.</p>
+<p>Cucumber utilizes a hierarchical testing structure to create readable, read-like-a-sentence representations of what your application should do. It reads in plain text files written in a language called Gherkin. Each file represents a <em>feature</em> of your system and contains a variety of <em>scenarios</em> that will be tested.</p>
 
 <p>These scenarios are defined by <em>step definitions</em> which serve as the connective tissue between the sentence describing the scenario and the runnable <em>support code</em> that tests that the feature has been implemented properly.  This support code is specific to the domain of your system (POSTing to a server, Triggering an onClick event in the UI).</p>
 
 <h3 id="features">Features</h3>
 
-<p>Every Gherkin file represents a feature and begins with the <em>feature</em> keyword. Features may be follwed by an optional description. The description is a deep dive that precisely describes the intent and purpose of a feature and includes any details that are relevant to it’s acceptance criteria.</p>
+<p>Every Gherkin file represents a feature and begins with the <em>feature</em> keyword. Features may be followed by an optional description. The description is a deep dive that precisely describes the intent and purpose of a feature and includes any details that are relevant to it’s acceptance criteria.</p>
 
 <p>Features contain several different scenarios which are representative of the different states a system may have to deal with and hopefully provide coverage over edge cases and distinct behavior that must be implemented.</p>
 
 <h3 id="scenario">Scenario</h3>
 
-<p>Scenario’s represent a specific scenario that describe how the system should behave when presented with a certain situration. In order to get a scenario to pass, the system’s behavior must adhere to the scenario’s outline.</p>
+<p>Scenario’s represent a specific scenario that describe how the system should behave when presented with a certain situation. In order to get a scenario to pass, the system’s behavior must adhere to the scenario’s outline.</p>
 
 <p>Scenarios are made up of three steps that are analagous to the <em>Arrange</em>, <em>Act</em>, <em>Assert</em> paradigm found in unit testing.</p>
 <ol>
@@ -82,9 +82,9 @@
 
 <h3 id="step-definitions">Step Definitions</h3>
 
-<p>Step defintions serve as the binding between Gherkin scenarios and the concrete implementation of the actions that will be performed in order to test the system. Step definitions describe how your support code should manipulate the system, but do not perform these manipulations themselves. They are kept distinct from the support code that will actually poke and prod the system.</p>
+<p>Step definitions serve as the binding between Gherkin scenarios and the concrete implementation of the actions that will be performed in order to test the system. Step definitions describe how your support code should manipulate the system, but do not perform these manipulations themselves. They are kept distinct from the support code that will actually poke and prod the system.</p>
 
-<p>Step defintions bridge this gap between the scenario and support code by using string matching to extract the relevant information from the scenario written in Gherkin and provide them to the support code. This is most commonly executed using regular expressions (regex).</p>
+<p>Step definitions bridge this gap between the scenario and support code by using string matching to extract the relevant information from the scenario written in Gherkin and provide them to the support code. This is most commonly executed using regular expressions (regex).</p>
 
 <figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="no">Given</span> <span class="sr">/^I have bought \$(\d+) worth of tacos (\d+) days ago$/</span> <span class="k">do</span> <span class="o">|</span><span class="n">amount</span><span class="p">,</span> <span class="n">days</span><span class="o">|</span>
   <span class="c1"># TODO: code goes here</span>

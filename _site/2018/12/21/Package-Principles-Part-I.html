@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Package Principles, Part I | TBD</title>
+<meta name="generator" content="Jekyll v3.8.4" />
+<meta property="og:title" content="Package Principles, Part I" />
+<meta name="author" content="Christopher Manahan" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="“The design of large systems depends critically on good component design”" />
+<meta property="og:description" content="“The design of large systems depends critically on good component design”" />
+<link rel="canonical" href="http://localhost:4000/2018/12/21/Package-Principles-Part-I.html" />
+<meta property="og:url" content="http://localhost:4000/2018/12/21/Package-Principles-Part-I.html" />
+<meta property="og:site_name" content="TBD" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-12-21T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"“The design of large systems depends critically on good component design”","author":{"@type":"Person","name":"Christopher Manahan"},"@type":"BlogPosting","url":"http://localhost:4000/2018/12/21/Package-Principles-Part-I.html","headline":"Package Principles, Part I","dateModified":"2018-12-21T00:00:00-05:00","datePublished":"2018-12-21T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2018/12/21/Package-Principles-Part-I.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="TBD" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">TBD</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Package Principles, Part I</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-12-21T00:00:00-05:00" itemprop="datePublished">Dec 21, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <blockquote>
+  <p>“The design of large systems depends critically on good component design”</p>
+</blockquote>
+
+<p>Packages allow teams to focus on and deploy isolated pieces of a system rather than the system as a whole. Grouping classes into packages allows developers to reason about higher level design at a new level of abstraction.</p>
+
+<p>However, just as dependencies between classes can become tangled and coupled, so too can dependencies between packages if left unmanaged as an application grows and requirements change.</p>
+
+<p>Two groups of six package principles have been developed and refined over the years to help create clean, robust, and maintainable packages that can be depended on by developers and stand the test of time. This blog post is about the first group, the <strong>Principles of Package Cohesion</strong>.</p>
+
+<h3 id="the-reuserelease-equivalence-principle">The Reuse/Release Equivalence Principle</h3>
+
+<blockquote>
+  <p>“The granule of reuse is the granule of release”</p>
+</blockquote>
+
+<p>If developers want to be able to reuse software packages, they cannot do so unless a release mechanism for that software exists. If the granule of release was simply at the source code level, we would be forced to copy and paste code, and any updates to that code or bug fixes would not be received by developers reusing the code. Therefore, the granule of release must be at the level of reusable packages in order to ensure that the client code and source code are synchronized and do not diverge.</p>
+
+<p>This signifies that packages are the granule of release, and offers hints as to how to structure our code to allow it to be reusable and releasable</p>
+
+<h4 id="all-or-none">All or None</h4>
+
+<p>If a package is to be reused, all of the classes within it must also be capable of being reused.</p>
+
+<p>We cannot have classes that are coupled to other packages as this would leave the package dependent and it’s true granule of reuse would have to include the package it is coupled too.</p>
+
+<h4 id="domain-independence">Domain Independence</h4>
+
+<p>We must structure our code so that the domain of the package is independent of other domains. A package must follow the single responsibility principle to encourage maximum reusability</p>
+
+<p>If we couple two responsibilities together, such as an electronic payment library and a shopping cart, clients can no longer utilize the functionality of one responsibility without the other, and the package has become less able to be reused in a wider variety of scenarios.</p>
+
+<p>By adhering to these two sub-principles we can ensure that our packages can be reused by other developers, and that our packages are modular.</p>
+
+<h3 id="the-common-reuse-principle">The Common Reuse Principle</h3>
+
+<blockquote>
+  <p>“The classes in a component are reused together. If you reuse one of the classes in a component, you reuse them all.”</p>
+</blockquote>
+
+<p>The CRP is the analogue of the Interface Segregation Principle for packages.</p>
+
+<blockquote>
+  <p>“No client should be forced to depend on methods it does not use” -ISP</p>
+</blockquote>
+
+<p>The ISP guides us to only depend on interfaces if we depend on the entirety of the interface. If we are depending on fragments of an interface in one class, and other fragments in another, it is a signal that our interface may have more than one responsibility and should be segregated.</p>
+
+<p>The CRP makes a similar assertion for packages. If you are going to reuse a packaged class, you must depend on the entire package. Just as the ISP provides a signal as to what methods belong in an interface, and which do not, the CRP tells us which classes do not belong within a package. The CRP says more about which classes <em>do not</em> belong in a package rather than those that do. If a class is not tightly coupled to other classes within a package, it is a signal that it does not belong.</p>
+
+<p>A single change to a class inside a package, whether or not a client of the package cares about that change or not, requires an entire re-release and re-deployment of that package. This is costly and should only occur if clients of the package actually care about the update. Therefore packaging together classes that do not change together increases the likelihood of costly and unnecessary re-releases.</p>
+
+<h3 id="the-common-closure-principle">The Common Closure Principle</h3>
+
+<blockquote>
+  <p>“The classes in a component should be closed together against the same kinds of changes. A change that affects a component affects all the classes in that component and no other components.”</p>
+</blockquote>
+
+<p>The CCP is the Single Responsibility Principle Analogue for packages.</p>
+
+<blockquote>
+  <p>“We want to increase coupling between classes that change for the same reasons, and separate those that change for different reasons” -SRP</p>
+</blockquote>
+
+<p>When changes inevitably occur, we want to isolate the number of places they occur in. The best way to do this is to keep classes that are likely to influence each other, to depend on each other, in the same packages.</p>
+
+<p>By making sure a package has one and only one responsibility, we help reinforce that changes to code within the package are isolated within that package and do not require changes to other classes in other packages.</p>
+
+<p>CCP attempts to minimize the number of changes that occur across packages when requirements change by providing a common closure around classes that all work together to implement a single abstraction.</p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>This blog post covers the first three of the package principles, the <strong>Principles of Package Cohesion</strong>. Part II will cover the second three, the <strong>Principles of Package Coupling</strong>.</p>
+
+
+  </div><a class="u-url" href="/2018/12/21/Package-Principles-Part-I.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TBD</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Christopher Manahan</li><li><a class="u-email" href="mailto:cmanahan@8thlight.com">cmanahan@8thlight.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/christophermanahan"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">christophermanahan</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Documenting the journey of a new apprentice @ 8th Light
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,21 +1,138 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-11T16:14:48-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">TBD</title><subtitle>Documenting the journey of a new apprentice @ 8th Light
-</subtitle><author><name>Christopher Manahan</name></author><entry><title type="html">Cucumber Basics</title><link href="http://localhost:4000/2018/12/11/cucumber-basics.html" rel="alternate" type="text/html" title="Cucumber Basics" /><published>2018-12-11T00:00:00-05:00</published><updated>2018-12-11T00:00:00-05:00</updated><id>http://localhost:4000/2018/12/11/cucumber-basics</id><content type="html" xml:base="http://localhost:4000/2018/12/11/cucumber-basics.html">&lt;h3 id=&quot;basics&quot;&gt;Basics&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-26T17:52:33-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">TBD</title><subtitle>Documenting the journey of a new apprentice @ 8th Light
+</subtitle><author><name>Christopher Manahan</name></author><entry><title type="html">Package Principles, Part I</title><link href="http://localhost:4000/2018/12/21/Package-Principles-Part-I.html" rel="alternate" type="text/html" title="Package Principles, Part I" /><published>2018-12-21T00:00:00-05:00</published><updated>2018-12-21T00:00:00-05:00</updated><id>http://localhost:4000/2018/12/21/Package-Principles-Part-I</id><content type="html" xml:base="http://localhost:4000/2018/12/21/Package-Principles-Part-I.html">&lt;blockquote&gt;
+  &lt;p&gt;“The design of large systems depends critically on good component design”&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;Cucumber is an acceptance testing framework. Let’s dive in.&lt;/p&gt;
+&lt;p&gt;Packages allow teams to focus on and deploy isolated pieces of a system rather than the system as a whole. Grouping classes into packages allows developers to reason about higher level design at a new level of abstraction.&lt;/p&gt;
 
-&lt;p&gt;Cucumber utilizes a hierarchical testing structure to create readable, read-like-a-sentence representations of what your application should do. It reads in plain text files written in a language called Gherkin. Each file represents a &lt;em&gt;feature&lt;/em&gt; of your system and contain a variety of &lt;em&gt;scenarios&lt;/em&gt; that will be tested.&lt;/p&gt;
+&lt;p&gt;However, just as dependencies between classes can become tangled and coupled, so too can dependencies between packages if left unmanaged as an application grows and requirements change.&lt;/p&gt;
+
+&lt;p&gt;Two groups of six package principles have been developed and refined over the years to help create clean, robust, and maintainable packages that can be depended on by developers and stand the test of time. This blog post is about the first group, the &lt;strong&gt;Principles of Package Cohesion&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-reuserelease-equivalence-principle&quot;&gt;The Reuse/Release Equivalence Principle&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“The granule of reuse is the granule of release”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If developers want to be able to reuse software packages, they cannot do so unless a release mechanism for that software exists. If the granule of release was simply at the source code level, we would be forced to copy and paste code, and any updates to that code or bug fixes would not be received by developers reusing the code. Therefore, the granule of release must be at the level of reusable packages in order to ensure that the client code and source code are synchronized and do not diverge.&lt;/p&gt;
+
+&lt;p&gt;This signifies that packages are the granule of release, and offers hints as to how to structure our code to allow it to be reusable and releasable&lt;/p&gt;
+
+&lt;h4 id=&quot;all-or-none&quot;&gt;All or None&lt;/h4&gt;
+
+&lt;p&gt;If a package is to be reused, all of the classes within it must also be capable of being reused.&lt;/p&gt;
+
+&lt;p&gt;We cannot have classes that are coupled to other packages as this would leave the package dependent and it’s true granule of reuse would have to include the package it is coupled too.&lt;/p&gt;
+
+&lt;h4 id=&quot;domain-independence&quot;&gt;Domain Independence&lt;/h4&gt;
+
+&lt;p&gt;We must structure our code so that the domain of the package is independent of other domains. A package must follow the single responsibility principle to encourage maximum reusability&lt;/p&gt;
+
+&lt;p&gt;If we couple two responsibilities together, such as an electronic payment library and a shopping cart, clients can no longer utilize the functionality of one responsibility without the other, and the package has become less able to be reused in a wider variety of scenarios.&lt;/p&gt;
+
+&lt;p&gt;By adhering to these two sub-principles we can ensure that our packages can be reused by other developers, and that our packages are modular.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-common-reuse-principle&quot;&gt;The Common Reuse Principle&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“The classes in a component are reused together. If you reuse one of the classes in a component, you reuse them all.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The CRP is the analogue of the Interface Segregation Principle for packages.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“No client should be forced to depend on methods it does not use” -ISP&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The ISP guides us to only depend on interfaces if we depend on the entirety of the interface. If we are depending on fragments of an interface in one class, and other fragments in another, it is a signal that our interface may have more than one responsibility and should be segregated.&lt;/p&gt;
+
+&lt;p&gt;The CRP makes a similar assertion for packages. If you are going to reuse a packaged class, you must depend on the entire package. Just as the ISP provides a signal as to what methods belong in an interface, and which do not, the CRP tells us which classes do not belong within a package. The CRP says more about which classes &lt;em&gt;do not&lt;/em&gt; belong in a package rather than those that do. If a class is not tightly coupled to other classes within a package, it is a signal that it does not belong.&lt;/p&gt;
+
+&lt;p&gt;A single change to a class inside a package, whether or not a client of the package cares about that change or not, requires an entire re-release and re-deployment of that package. This is costly and should only occur if clients of the package actually care about the update. Therefore packaging together classes that do not change together increases the likelihood of costly and unnecessary re-releases.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-common-closure-principle&quot;&gt;The Common Closure Principle&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“The classes in a component should be closed together against the same kinds of changes. A change that affects a component affects all the classes in that component and no other components.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The CCP is the Single Responsibility Principle Analogue for packages.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“We want to increase coupling between classes that change for the same reasons, and separate those that change for different reasons” -SRP&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;When changes inevitably occur, we want to isolate the number of places they occur in. The best way to do this is to keep classes that are likely to influence each other, to depend on each other, in the same packages.&lt;/p&gt;
+
+&lt;p&gt;By making sure a package has one and only one responsibility, we help reinforce that changes to code within the package are isolated within that package and do not require changes to other classes in other packages.&lt;/p&gt;
+
+&lt;p&gt;CCP attempts to minimize the number of changes that occur across packages when requirements change by providing a common closure around classes that all work together to implement a single abstraction.&lt;/p&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;This blog post covers the first three of the package principles, the &lt;strong&gt;Principles of Package Cohesion&lt;/strong&gt;. Part II will cover the second three, the &lt;strong&gt;Principles of Package Coupling&lt;/strong&gt;.&lt;/p&gt;</content><author><name>Christopher Manahan</name></author><summary type="html">“The design of large systems depends critically on good component design”</summary></entry><entry><title type="html">Network Sockets</title><link href="http://localhost:4000/2018/12/14/network-sockets.html" rel="alternate" type="text/html" title="Network Sockets" /><published>2018-12-14T00:00:00-05:00</published><updated>2018-12-14T00:00:00-05:00</updated><id>http://localhost:4000/2018/12/14/network-sockets</id><content type="html" xml:base="http://localhost:4000/2018/12/14/network-sockets.html">&lt;h3 id=&quot;abstractions-all-the-way-down&quot;&gt;Abstractions All the Way Down&lt;/h3&gt;
+
+&lt;p&gt;A network socket, like all entities and concepts in software, is an abstraction. A network socket is a software representation of a point in a computer network that is internally exposed to processes, such as a Java application, by a computer’s operating system. The OS exposes this endpoint through networking software which is referred to as a protocol stack and provides a set of system calls that allow a user to send and recieve data to other endpoints in the network that have connected to the network socket.&lt;/p&gt;
+
+&lt;p&gt;There are many layers of abstraction between the software we wield as developers, and the eventual physical electrons that get sent across copper or fiber optic wires to enable communcation across a computer network. Operating systems also use sockets to allow different processes within a computer to talk to one another in a process known as inter-process communication.&lt;/p&gt;
+
+&lt;h3 id=&quot;socket-address&quot;&gt;Socket Address&lt;/h3&gt;
+
+&lt;p&gt;A network socket is a representation of a communcations endpoint in a network. This network can be local or remote, and the representation is most often referred to using an &lt;em&gt;address&lt;/em&gt;. The first stage in establishing communcation to other nodes in a network is the request that the protocol stack creates a socket at a specific address.&lt;/p&gt;
+
+&lt;p&gt;A socket address is composed of both an IP address that identifies the computer it has been created on and a port that represents a single endpoint within that computer. Ports are an abstraction that allow a computer to establish multiple connections to various different networks.&lt;/p&gt;
+
+&lt;h3 id=&quot;socket-descriptor&quot;&gt;Socket Descriptor&lt;/h3&gt;
+
+&lt;p&gt;When the protocol stack creates a socket it provides a process (a running application) with a socket &lt;em&gt;descriptor&lt;/em&gt; which is a single unique value that the application can use to identify to the protocol stack which socket it would like to send or receive from. The protocol stack can then identify the IP address and port that the socket descriptor refers to and perform the appropriate action. This leaves applications unaware of the details of where or how they will communicate with a socket, whether it’s connected locally or remotely, or to a single client or many. All the application is aware of is the single descriptor.&lt;/p&gt;
+
+&lt;p&gt;This degree of seperation also means that the local protocol stack does not have access to foreign socket descriptors, these are internal to that socket representation that is managed by it’s own remote protocol stack.&lt;/p&gt;
+
+&lt;h3 id=&quot;two-way-communication&quot;&gt;Two Way Communication&lt;/h3&gt;
+
+&lt;p&gt;When a process at a local IP address requests to communicate with a socket at a foreign IP address on a certain port the local protocol stack creates a socket, returns its descriptor to the process, and attempts to establish a connection to the foreign address. That foreign protocol stack receives the request, and subsequently creates it’s own socket in order to facilitate the communication. The process of associating a socket to an address is known as &lt;em&gt;binding&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;This connection is only established if a foreign process(es) has requested to the foreign protocol stack that it would like to listen for connection requests on the address and port that the request has been sent to. The listening process will then receive a socket descriptor from the protocol stack if a connection request has succeded and enable the foreign process to send and recieve data through it’s own local socket to the socket managed by the protocol stack on the other side of the network.&lt;/p&gt;
+
+&lt;p&gt;Once the local socket has been created and a socket descriptor has been returned, the local process can simply reference the socket descriptor and the protocol stack will handle sending and receiving data to and from the foreign socket at the foreign IP address at the specific port.&lt;/p&gt;
+
+&lt;p&gt;A socket exposes both its input and output which represent the ability to ask the protocol stack to send data through the network (write to the socket) or receive data that has been sent to the socket (read from the socket). In order to facilitate two way communication, a process must reference both of these data streams.&lt;/p&gt;
+
+&lt;h3 id=&quot;summary&quot;&gt;Summary&lt;/h3&gt;
+
+&lt;p&gt;There is a nuance in differentiating socket addresses, descriptors, and the socket itself. 
+To summarize:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;A socket is the internal (software) representation created by the protocol stack, that allows it to send and receive data across a network.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;A socket address is made up of an IP address (the address of the host computer) and a port (the specific connection within that host) and is used when a protocol stack wants to communicate with a socket on another network or facilitate communcation between local processes.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;A socket descriptor is the identifier that allows a process running on an operating system to communicate with that operating system’s protocol stack. It only has meaning within the a single computer and cannot be used to reference other network sockets.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Sockets allow network connections to be abstracted away from the processes that wish to speak to other processes. This abstraction applies whether the other process is halfway across the world or running on the same computer. The protocol stack software exposed by the OS handles these details for us and allows higher level protocol’s like HTTP to run on these abstractions so we can talk to each other over a variety of networks using a variety of mediums!&lt;/p&gt;</content><author><name>Christopher Manahan</name></author><summary type="html">Abstractions All the Way Down</summary></entry><entry><title type="html">Cucumber Basics</title><link href="http://localhost:4000/2018/12/11/cucumber-basics.html" rel="alternate" type="text/html" title="Cucumber Basics" /><published>2018-12-11T00:00:00-05:00</published><updated>2018-12-11T00:00:00-05:00</updated><id>http://localhost:4000/2018/12/11/cucumber-basics</id><content type="html" xml:base="http://localhost:4000/2018/12/11/cucumber-basics.html">&lt;p&gt;Cucumber is an acceptance testing framework. Let’s dive in.&lt;/p&gt;
+
+&lt;h3 id=&quot;basics&quot;&gt;Basics&lt;/h3&gt;
+
+&lt;p&gt;Cucumber utilizes a hierarchical testing structure to create readable, read-like-a-sentence representations of what your application should do. It reads in plain text files written in a language called Gherkin. Each file represents a &lt;em&gt;feature&lt;/em&gt; of your system and contains a variety of &lt;em&gt;scenarios&lt;/em&gt; that will be tested.&lt;/p&gt;
 
 &lt;p&gt;These scenarios are defined by &lt;em&gt;step definitions&lt;/em&gt; which serve as the connective tissue between the sentence describing the scenario and the runnable &lt;em&gt;support code&lt;/em&gt; that tests that the feature has been implemented properly.  This support code is specific to the domain of your system (POSTing to a server, Triggering an onClick event in the UI).&lt;/p&gt;
 
 &lt;h3 id=&quot;features&quot;&gt;Features&lt;/h3&gt;
 
-&lt;p&gt;Every Gherkin file represents a feature and begins with the &lt;em&gt;feature&lt;/em&gt; keyword. Features may be follwed by an optional description. The description is a deep dive that precisely describes the intent and purpose of a feature and includes any details that are relevant to it’s acceptance criteria.&lt;/p&gt;
+&lt;p&gt;Every Gherkin file represents a feature and begins with the &lt;em&gt;feature&lt;/em&gt; keyword. Features may be followed by an optional description. The description is a deep dive that precisely describes the intent and purpose of a feature and includes any details that are relevant to it’s acceptance criteria.&lt;/p&gt;
 
 &lt;p&gt;Features contain several different scenarios which are representative of the different states a system may have to deal with and hopefully provide coverage over edge cases and distinct behavior that must be implemented.&lt;/p&gt;
 
 &lt;h3 id=&quot;scenario&quot;&gt;Scenario&lt;/h3&gt;
 
-&lt;p&gt;Scenario’s represent a specific scenario that describe how the system should behave when presented with a certain situration. In order to get a scenario to pass, the system’s behavior must adhere to the scenario’s outline.&lt;/p&gt;
+&lt;p&gt;Scenario’s represent a specific scenario that describe how the system should behave when presented with a certain situation. In order to get a scenario to pass, the system’s behavior must adhere to the scenario’s outline.&lt;/p&gt;
 
 &lt;p&gt;Scenarios are made up of three steps that are analagous to the &lt;em&gt;Arrange&lt;/em&gt;, &lt;em&gt;Act&lt;/em&gt;, &lt;em&gt;Assert&lt;/em&gt; paradigm found in unit testing.&lt;/p&gt;
 &lt;ol&gt;
@@ -35,9 +152,9 @@
 
 &lt;h3 id=&quot;step-definitions&quot;&gt;Step Definitions&lt;/h3&gt;
 
-&lt;p&gt;Step defintions serve as the binding between Gherkin scenarios and the concrete implementation of the actions that will be performed in order to test the system. Step definitions describe how your support code should manipulate the system, but do not perform these manipulations themselves. They are kept distinct from the support code that will actually poke and prod the system.&lt;/p&gt;
+&lt;p&gt;Step definitions serve as the binding between Gherkin scenarios and the concrete implementation of the actions that will be performed in order to test the system. Step definitions describe how your support code should manipulate the system, but do not perform these manipulations themselves. They are kept distinct from the support code that will actually poke and prod the system.&lt;/p&gt;
 
-&lt;p&gt;Step defintions bridge this gap between the scenario and support code by using string matching to extract the relevant information from the scenario written in Gherkin and provide them to the support code. This is most commonly executed using regular expressions (regex).&lt;/p&gt;
+&lt;p&gt;Step definitions bridge this gap between the scenario and support code by using string matching to extract the relevant information from the scenario written in Gherkin and provide them to the support code. This is most commonly executed using regular expressions (regex).&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;Given&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/^I have bought \$(\d+) worth of tacos (\d+) days ago$/&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;days&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
   &lt;span class=&quot;c1&quot;&gt;# TODO: code goes here&lt;/span&gt;
@@ -124,7 +241,7 @@
 
 &lt;p&gt;The Cucumber Book is an excellent resource for further reading and code examples on how to use Cucumber with your next project.&lt;/p&gt;
 
-&lt;p&gt;Working with expressive acceptance tests provides a bridge between developers, clients, and business stakeholders and allows effective communication of requirements and acceptance criteria making your development cycle more efficient and less prone to rewrites!&lt;/p&gt;</content><author><name>Christopher Manahan</name></author><summary type="html">Basics</summary></entry><entry><title type="html">Dependency Inversion</title><link href="http://localhost:4000/2018/12/07/dependency-inversion.html" rel="alternate" type="text/html" title="Dependency Inversion" /><published>2018-12-07T00:00:00-05:00</published><updated>2018-12-07T00:00:00-05:00</updated><id>http://localhost:4000/2018/12/07/dependency-inversion</id><content type="html" xml:base="http://localhost:4000/2018/12/07/dependency-inversion.html">&lt;ul&gt;
+&lt;p&gt;Working with expressive acceptance tests provides a bridge between developers, clients, and business stakeholders and allows effective communication of requirements and acceptance criteria making your development cycle more efficient and less prone to rewrites!&lt;/p&gt;</content><author><name>Christopher Manahan</name></author><summary type="html">Cucumber is an acceptance testing framework. Let’s dive in.</summary></entry><entry><title type="html">Dependency Inversion</title><link href="http://localhost:4000/2018/12/07/dependency-inversion.html" rel="alternate" type="text/html" title="Dependency Inversion" /><published>2018-12-07T00:00:00-05:00</published><updated>2018-12-07T00:00:00-05:00</updated><id>http://localhost:4000/2018/12/07/dependency-inversion</id><content type="html" xml:base="http://localhost:4000/2018/12/07/dependency-inversion.html">&lt;ul&gt;
   &lt;li&gt;High-level modules should not depend on low-level modules. Both should depend on abstractions.
   &lt;/li&gt;
   &lt;li&gt;Abstractions should not depend upon details. Details should depend upon abstractions.&lt;/li&gt;
