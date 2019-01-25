@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Functional Exception Handling in Java | TBD</title>
+<meta name="generator" content="Jekyll v3.8.4" />
+<meta property="og:title" content="Functional Exception Handling in Java" />
+<meta name="author" content="Christopher Manahan" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Handling exceptions in Java requires diligence and strategy in order to determine what to do if our program can recover from failed events and what we should do when we can’t." />
+<meta property="og:description" content="Handling exceptions in Java requires diligence and strategy in order to determine what to do if our program can recover from failed events and what we should do when we can’t." />
+<link rel="canonical" href="http://localhost:4000/2019/01/25/functional-exception-handling-in-java.html" />
+<meta property="og:url" content="http://localhost:4000/2019/01/25/functional-exception-handling-in-java.html" />
+<meta property="og:site_name" content="TBD" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-01-25T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Handling exceptions in Java requires diligence and strategy in order to determine what to do if our program can recover from failed events and what we should do when we can’t.","author":{"@type":"Person","name":"Christopher Manahan"},"@type":"BlogPosting","url":"http://localhost:4000/2019/01/25/functional-exception-handling-in-java.html","headline":"Functional Exception Handling in Java","dateModified":"2019-01-25T00:00:00-05:00","datePublished":"2019-01-25T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2019/01/25/functional-exception-handling-in-java.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="TBD" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">TBD</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Functional Exception Handling in Java</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-01-25T00:00:00-05:00" itemprop="datePublished">Jan 25, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Handling exceptions in Java requires diligence and strategy in order to determine what to do if our program can recover from failed events and what we should do when we can’t.</p>
+
+<p>Java 8 introduced Functional Java which opens up the world of functional programming techniques to the Java community.</p>
+
+<p>These techniques can be applied to deal with exceptions in new and interesting ways. So what is an exception, and why should you handle it functionally?</p>
+
+<h3 id="exceptions">Exceptions</h3>
+
+<blockquote>
+  <p>An exception is an event, which occurs during the execution of a program, that disrupts the normal flow of the program’s instructions.</p>
+</blockquote>
+
+<p>Exceptions are events that subvert how a program would normally run. They are objects that extend the throwable class. Three types of exceptions exist, checked, unchecked, and errors. This blog post will focus on unchecked exceptions.</p>
+
+<p>For reference, checked exceptions are checked at compile time and any method that may throw an exceptions must include a <code class="highlighter-rouge">throws</code> clause in it’s signature. This specifies to callers of this method that they must either catch or rethrow this exceptions. Unchecked exceptions are thrown at runtime, and while they may still be caught and handled, or rethrown, it is not required in order for the code to successfully compile</p>
+
+<p>Exceptions allow methods to exit without returning a value, by handing an exception off to the runtime system.  The runtime system searched the call stack for a called method that can handle the exception. If a method specifies that it can catch the appropriate exception type it will handle the exception according to it’s specification. If no exception handler is thrown, the program will shutdown.</p>
+
+<h3 id="maybe-type">Maybe Type</h3>
+
+<p>In order to work with this limitation and specify a technique to handle exceptions without throwing them into the runtime environment we can take advantage of the ability to return Objects, which can act as containers for a variety of state and behavior. This allows us to return objects that contain different state that depends upon whether or not the method caught an exception or successfully executed.</p>
+
+<p>Functional programming provides us with a Maybe type that can either include or not include a value. The maybe type encapsulates this optional value and is a useful construct to deal with nullable values. The maybe type is not just useful for dealing with potential null values however, it also can provide us with a technique to handle recoverable unchecked exceptions gracefully and avoid using exceptions for control flow. Java 8 added the Optional class which is an implementation of the maybe type and includes a variety of chainable methods that allow for a functional style of piped data transformation to be utilized.</p>
+
+<p>In addition we will be discussing the either type which is another paradigm from functional programming that can provide a highly expressive way to implement functional exception handling. While the either type is not included in java we will discuss a small class that can be written using generics to implement this powerful type. However, in certain scenarios we can use an Optional to express whether or not an operation completed without throwing an exception.</p>
+
+<h3 id="optional">Optional</h3>
+
+<p>The way to represent this is simple and clean. If the optional contains data, the method call completed as expected, however if an exception was thrown, the optional will be empty. Why is this advantageous? It gives us the opportunity to handle unchecked exceptions, while making it clear that the method can return different encapsulated values and promotes the caller to handle both the successful (data is present), and failed (empty) scenarios. In addition, the optional class gives us access to the powerful functional interfaces in java, which allow us to easily transform data received from a method that would otherwise have thrown an unchecked exception. The calling class also obtains the opportunity to gracefully exit or recover without handling unnecessary exceptions when it is desired to ignore and recover from the exception.</p>
+
+<h3 id="server-example">Server Example</h3>
+
+<p>Let’s look at a simple HTTP server that to demonstrate the elegance enabled by functional exception handling.</p>
+
+<h4 id="procedural-exception-handling">Procedural Exception Handling</h4>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">class</span> <span class="nc">HTTPServer</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="n">Parser</span> <span class="n">parser</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">Handler</span> <span class="n">handler</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">Logger</span> <span class="n">logger</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">HTTPServer</span><span class="o">(</span><span class="n">Parser</span> <span class="n">parser</span><span class="o">,</span> <span class="n">Handler</span> <span class="n">handler</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">parser</span> <span class="o">=</span> <span class="n">parser</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">handler</span> <span class="o">=</span> <span class="n">handler</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">(</span><span class="n">Connection</span> <span class="n">connection</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">serve</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+    <span class="n">close</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">serve</span><span class="o">(</span><span class="n">connection</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">String</span> <span class="n">read</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConnectionReader</span><span class="o">(</span><span class="n">connection</span><span class="o">).</span><span class="na">read</span><span class="o">();</span>
+      <span class="n">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+      <span class="n">Response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="na">handle</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+      <span class="n">connection</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">response</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RuntimeException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">close</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">close</span><span class="o">(</span><span class="n">connection</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">connection</span><span class="o">.</span><span class="na">close</span><span class="o">()</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RuntimeException</span> <span class="n">ignored</span><span class="o">)</span> <span class="o">{}</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>This echo server contains a few abstraction.</p>
+
+<p>First, we have a connection that is capable of being read from, written to, and closed. We also have a ConnectionReader that can read a request string in from a connection. This is not injected because it’s behavior is simple and unnecessary too mock in unit tests. In addition we have a parse that can parse data read from the connection into a request. Finally, we have a handler that can handle requests and generate an appropriate response and a logger for well, logging.</p>
+
+<p>Unfortunately, as reading from, writing to, and closing a socket are operations that throw IOExceptions, we need to utilize a try catch block to handle unexpected behavior. We will have the connection rethrow these exceptions as RuntimeExceptions which is an unchecked exception type so that we may choose how to handle the thrown exceptions. For this example we have to make sure the connection gets closed if an exception is thrown so we assert that the connection closes in the catch clause.</p>
+
+<p>This setup is legible and descriptive but the connection must be closed if an exception is caught.  Let’s now assume that instead of a String, the ConnectionReader returns an Optional of the read in request string and see how we can leverage the functional interfaces in Java to produce cleaner code.</p>
+
+<h4 id="optional-exception-handling">Optional Exception Handling</h4>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">class</span> <span class="nc">HTTPServer</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="n">Parser</span> <span class="n">parser</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">Handler</span> <span class="n">handler</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">Logger</span> <span class="n">logger</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">HTTPServer</span><span class="o">(</span><span class="n">Parser</span> <span class="n">parser</span><span class="o">,</span> <span class="n">Handler</span> <span class="n">handler</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">parser</span> <span class="o">=</span> <span class="n">parser</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">handler</span> <span class="o">=</span> <span class="n">handler</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">(</span><span class="n">Connection</span> <span class="n">connection</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">serve</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+    <span class="n">close</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">serve</span><span class="o">(</span><span class="n">connection</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">new</span> <span class="nf">ConnectionReader</span><span class="o">(</span><span class="n">connection</span><span class="o">).</span><span class="na">read</span>
+      <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="nl">parser:</span><span class="o">:</span><span class="n">parse</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="nl">handler:</span><span class="o">:</span><span class="n">handle</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">ifPresentOrElse</span><span class="o">(</span><span class="nl">connection:</span><span class="o">:</span><span class="n">send</span><span class="o">,</span> <span class="nl">connection:</span><span class="o">:</span><span class="n">close</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">close</span><span class="o">(</span><span class="n">connection</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">connection</span><span class="o">.</span><span class="na">close</span><span class="o">()</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RuntimeException</span> <span class="n">ignored</span><span class="o">)</span> <span class="o">{}</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>We can see that the method is now a clean chain of calls that closes the connection if an exception is thrown and the Optional is empty using <code class="highlighter-rouge">ifPresentOrElse</code>. This is more expressive and adding further data transformation capability into the server is as simple as adding another <code class="highlighter-rouge">.map()</code> into the chain.</p>
+
+<p>Finally, I would like to take a look at the Either class and how we can implement it in Java to obtain another technique to handle exceptions functionally.</p>
+
+<h4 id="either-exception-handling">Either Exception Handling</h4>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">class</span> <span class="nc">HTTPServer</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="n">Parser</span> <span class="n">parser</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">Handler</span> <span class="n">handler</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">Logger</span> <span class="n">logger</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">HTTPServer</span><span class="o">(</span><span class="n">Parser</span> <span class="n">parser</span><span class="o">,</span> <span class="n">Handler</span> <span class="n">handler</span><span class="o">,</span> <span class="n">Logger</span> <span class="n">logger</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">parser</span> <span class="o">=</span> <span class="n">parser</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">handler</span> <span class="o">=</span> <span class="n">handler</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">logger</span> <span class="o">=</span> <span class="n">logger</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">(</span><span class="n">Connection</span> <span class="n">connection</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">serve</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+    <span class="n">close</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">serve</span><span class="o">(</span><span class="n">connection</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">new</span> <span class="nf">ConnectionReader</span><span class="o">(</span><span class="n">connection</span><span class="o">).</span><span class="na">read</span>
+      <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="nl">parser:</span><span class="o">:</span><span class="n">parse</span><span class="o">,</span> <span class="nl">logger:</span><span class="o">:</span><span class="n">log</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="nl">handler:</span><span class="o">:</span><span class="n">handle</span><span class="o">,</span> <span class="nl">logger:</span><span class="o">:</span><span class="n">log</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">ifSuccessOrElse</span><span class="o">(</span><span class="nl">connection:</span><span class="o">:</span><span class="n">send</span><span class="o">,</span> <span class="nl">connection:</span><span class="o">:</span><span class="n">close</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">close</span><span class="o">(</span><span class="n">connection</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">connection</span><span class="o">.</span><span class="na">close</span><span class="o">()</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RuntimeException</span> <span class="n">ignored</span><span class="o">)</span> <span class="o">{}</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>Now we obtain the ability to have Either wrap a value if the call succeeded, or wrap an exception if a failure occurred. We can then pipe these into the appropriate functions. In this example we will simply log the exception.</p>
+
+<p>Below is an example implementation of the Either type in Java that utilizes generics and static constructors.</p>
+
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Either</span><span class="o">&lt;</span><span class="n">S</span><span class="o">,</span><span class="n">F</span><span class="o">&gt;</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">S</span> <span class="n">success</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">F</span> <span class="n">failure</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">Either</span><span class="o">(</span><span class="n">F</span> <span class="n">f</span><span class="o">,</span> <span class="n">S</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">failure</span> <span class="o">=</span> <span class="n">f</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">success</span> <span class="o">=</span> <span class="n">s</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">S</span><span class="o">,</span><span class="n">F</span><span class="o">&gt;</span> <span class="n">Either</span><span class="o">&lt;</span><span class="n">S</span><span class="o">,</span><span class="n">F</span><span class="o">&gt;</span> <span class="nf">success</span><span class="o">(</span><span class="n">S</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">Either</span><span class="o">&lt;&gt;(</span><span class="kc">null</span><span class="o">,</span> <span class="n">s</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="n">S</span> <span class="nf">success</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">success</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isSuccess</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">success</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">S</span><span class="o">,</span><span class="n">F</span><span class="o">&gt;</span> <span class="n">Either</span><span class="o">&lt;</span><span class="n">S</span><span class="o">,</span><span class="n">F</span><span class="o">&gt;</span> <span class="nf">failure</span><span class="o">(</span><span class="n">F</span> <span class="n">f</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">Either</span><span class="o">&lt;&gt;(</span><span class="n">f</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="n">F</span> <span class="nf">failure</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">failure</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isFailure</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">failure</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="o">&lt;</span><span class="n">S</span><span class="o">,</span><span class="n">F</span><span class="o">&gt;</span> <span class="n">Either</span><span class="o">&lt;</span><span class="n">S</span><span class="o">,</span><span class="n">F</span><span class="o">&gt;</span> <span class="nf">map</span><span class="o">(</span><span class="n">Function</span><span class="o">&lt;</span><span class="n">S</span><span class="o">,</span> <span class="n">Either</span><span class="o">&lt;&gt;&gt;</span> <span class="n">successMapper</span><span class="o">,</span> <span class="n">Function</span><span class="o">&lt;</span><span class="n">F</span><span class="o">,</span> <span class="n">Either</span><span class="o">&lt;&gt;&gt;</span> <span class="n">failureMapper</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">isSuccess</span><span class="o">())</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="nf">success</span><span class="o">(</span><span class="n">successMapper</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">success</span><span class="o">))</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="nf">failure</span><span class="o">(</span><span class="n">failureMapper</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">failure</span><span class="o">));</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">ifSuccessOrElse</span><span class="o">(</span><span class="n">Consumer</span><span class="o">&lt;</span><span class="n">S</span><span class="o">&gt;</span> <span class="n">consumer</span><span class="o">,</span> <span class="n">Runnable</span> <span class="n">runnable</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">isSuccess</span><span class="o">())</span> <span class="o">{</span>
+      <span class="n">consumer</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">success</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+      <span class="n">runnable</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>This is a small API that provides the necessary methods but this could be expanded to include the analogies to the full breadth of methods included in Java’s Optional type.</p>
+
+<p>Those methods can be viewed here: 
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Consumer.html">Java 11 Optional Class</a></p>
+
+<p>Java 8 brought a host of powerful new capabilities to Java and we can learn from the paths blazed by the functional programmers before us. Java 8 adds new options to handle exceptions in Java and with some thought and respect, we can write cleaner, better Java code and handle exceptions in new and interesting ways!</p>
+
+
+  </div><a class="u-url" href="/2019/01/25/functional-exception-handling-in-java.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TBD</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Christopher Manahan</li><li><a class="u-email" href="mailto:cmanahan@8thlight.com">cmanahan@8thlight.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/christophermanahan"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">christophermanahan</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Documenting the journey of a new apprentice @ 8th Light
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
